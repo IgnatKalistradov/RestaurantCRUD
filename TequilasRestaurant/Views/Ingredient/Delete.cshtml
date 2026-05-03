@@ -1,0 +1,13 @@
+﻿@model TequilasRestaurant.Models.DbModels.Ingredient;
+@{
+	ViewData["Title"] = $"Delete {Model.Name} Ingredient";
+}
+
+<form asp-action="Delete" asp-controller="Ingredient" method="post">
+	<label>Are you sure you want to delete @Model.Name ingredient?</label>
+	<input type="hidden" asp-for="IngredientId"/>
+	<input type="hidden" asp-for="Name" />
+	<input type="hidden" asp-for="Description" />
+	<button class="btn btn-danger">Delete</button>
+	<a asp-action="Index" asp-controller="Ingredient">Back to List</a>
+</form>

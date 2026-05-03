@@ -1,0 +1,27 @@
+﻿@using TequilasRestaurant.Models.DbModels
+@model IEnumerable<Ingredient>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h1>Ingredients</h1>
+
+<div><a asp-action="Create">Create Ingredient</a></div>
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th colspan="3">Operations</th>
+    </tr>
+    @foreach (Ingredient ingredient in Model)
+    {
+        <tr>
+            <td>@ingredient.Name</td>
+            <td><a asp-action="Details" asp-route-id="@ingredient.IngredientId">Details</a></td>
+            <td><a asp-action="Edit" asp-route-id="@ingredient.IngredientId">Edit</a></td>
+            <td><a asp-action="Delete" asp-route-id="@ingredient.IngredientId">Delete</a></td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,18 @@
+﻿@model TequilasRestaurant.Models.DbModels.Ingredient;
+@{
+}
+
+<h1>Edit Ingredient</h1>
+
+<form asp-action="Edit" asp-controller="Ingredient" method="post">
+	<input type="hidden" asp-for="IngredientId" />
+	<div class="mb-3">
+		<label class="form-label">Name</label>
+		<input asp-for="Name" class="form-control" value="@Model.Name" />
+	</div>
+	<div class="mb-3">
+		<label class="form-label">Description</label>
+		<input asp-for="Description" class="form-control" value="@Model.Description" />
+	</div>
+	<button type="submit" class="btn btn-primary">Save</button>
+</form>
