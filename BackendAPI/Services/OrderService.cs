@@ -1,8 +1,9 @@
-﻿using BackendAPI.Models.DbModels;
-using BackendAPI.Models.ViewModels;
+﻿using BackendAPI.Models;
+using BackendAPI.Models.DbModels;
 
 
-namespace BackendAPI.Models.Services
+
+namespace BackendAPI.Services
 {
     public class OrderService
     {
@@ -13,27 +14,27 @@ namespace BackendAPI.Models.Services
             _repository = repository;
         }
 
-        public Order CreateOrder(OrderViewModel orderView, string userId)
-        {
-            Order order = new Order()
-            {
-                OrderDate = DateTime.Now,
-                TotalAmount = orderView.TotalAmount,
-                UserId = userId
-            };
+        //public Order CreateOrder(OrderViewModel orderView, string userId)
+        //{
+        //    Order order = new Order()
+        //    {
+        //        OrderDate = DateTime.Now,
+        //        TotalAmount = orderView.TotalAmount,
+        //        UserId = userId
+        //    };
 
-            foreach(var orderViewItem in orderView.OrderItems)
-            {
-                order.OrderItems.Add(new OrderItem()
-                {
-                    ProductId = orderViewItem.ProductId,
-                    Quantity = orderViewItem.Quantity,
-                    Price = orderViewItem.PricePerUnit
-                });
-            }
+        //    foreach(var orderViewItem in orderView.OrderItems)
+        //    {
+        //        order.OrderItems.Add(new OrderItem()
+        //        {
+        //            ProductId = orderViewItem.ProductId,
+        //            Quantity = orderViewItem.Quantity,
+        //            Price = orderViewItem.PricePerUnit
+        //        });
+        //    }
 
-            return order;
-        }
+        //    return order;
+        //}
         public async Task AddAsync(Order order)
         {
             await _repository.AddAsync(order);

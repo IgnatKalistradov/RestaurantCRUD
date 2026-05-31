@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BackendAPI.Models;
+﻿using BackendAPI.Models;
 using BackendAPI.Models.DbModels;
-using BackendAPI.Models.Services;
+using BackendAPI.Models.DTO.IngredientDto;
+using BackendAPI.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BackendAPI.Controllers
 {
@@ -30,16 +31,16 @@ namespace BackendAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name", "Description")] Ingredient ingredient)
+        public async Task<IActionResult> Create([Bind("Name", "Description")] CreateIngredientDto ingredientDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ingredient);
+                return BadRequest(ingredientDto);
             }
 
-            await _ingredientService.AddAsync(ingredient);
+            Ingredient ingredient = await _ingredientService.AddAsync(ingredientDto);
 
-            return CreatedAtAction(nameof(this.Details), ingredient);
+            return CreatedAtAction(nameof(this.Details), new {id = ingredient.IngredientId}, ingredient);
         }
 
         [HttpPost("edit/{id:int}")]
@@ -57,16 +58,18 @@ namespace BackendAPI.Controllers
 
 
         [HttpPost("delete/{id:int}")]
-        public async Task<IActionResult> Delete([Bind("IngredientId", "Name", "Description")] Ingredient ingredient, int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ingredient);
+                await _ingredientService.DeleteAsync(id);
             }
-
-            await _ingredientService.DeleteAsync(ingredient.IngredientId);
-
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            
+            return NoContent();
         }
     }
 }

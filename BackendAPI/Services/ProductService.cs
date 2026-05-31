@@ -1,6 +1,7 @@
-﻿using BackendAPI.Models.DbModels;
+﻿using BackendAPI.Models;
+using BackendAPI.Models.DbModels;
 
-namespace BackendAPI.Models.Services
+namespace BackendAPI.Services
 {
     public class ProductService
     {

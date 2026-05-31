@@ -1,6 +1,8 @@
 
+using BackendAPI.Data;
 using BackendAPI.Models;
-using BackendAPI.Models.Services;
+using BackendAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendAPI
 {
@@ -16,6 +18,14 @@ namespace BackendAPI
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -24,7 +34,8 @@ namespace BackendAPI
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped(typeof(IImageService), typeof(ImageService));
             builder.Services.AddScoped<IngredientService>();
-            builder.Services.AddScoped<ProductService>(); 
+            builder.Services.AddScoped<ProductService>();
+            builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<OrderService>();
 
             var app = builder.Build();
@@ -35,6 +46,8 @@ namespace BackendAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowFrontend");
 
             app.UseHttpsRedirection();
 

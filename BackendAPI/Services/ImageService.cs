@@ -1,8 +1,9 @@
 ﻿
 using Microsoft.AspNetCore.Hosting;
 using BackendAPI.Models.DbModels;
+using BackendAPI.Models;
 
-namespace BackendAPI.Models.Services
+namespace BackendAPI.Services
 {
     public class ImageService : IImageService
     {

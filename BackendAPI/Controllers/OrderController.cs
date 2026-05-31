@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BackendAPI.Models;
 using BackendAPI.Models.DbModels;
-using BackendAPI.Models.Services;
-using BackendAPI.Models.ViewModels;
+using BackendAPI.Services;
+
 
 namespace BackendAPIAPI.Controllers
 {
@@ -23,91 +23,91 @@ namespace BackendAPIAPI.Controllers
             _userManager = userManager;
         }
 
-        private async Task<OrderViewModel> GetOrderViewModel()
-        {
-            return HttpContext.Session.Get<OrderViewModel>("OrderViewModel") ?? new OrderViewModel
-            {
-                OrderItems = new List<OrderItemViewModel>(),
-                Products = await _productService.SelectAllAsync()
-            };
-        }
+        //private async Task<OrderViewModel> GetOrderViewModel()
+        //{
+        //    return HttpContext.Session.Get<OrderViewModel>("OrderViewModel") ?? new OrderViewModel
+        //    {
+        //        OrderItems = new List<OrderItemViewModel>(),
+        //        Products = await _productService.SelectAllAsync()
+        //    };
+        //}
 
-        private void SetOrderViewModel(OrderViewModel orderViewModel)
-        {
-            HttpContext.Session.Set("OrderViewModel", orderViewModel);
-        }
+        //private void SetOrderViewModel(OrderViewModel orderViewModel)
+        //{
+        //    HttpContext.Session.Set("OrderViewModel", orderViewModel);
+        //}
 
         private void RemoveOrderViewModel()
         {
             HttpContext.Session.Remove("OrderViewModel");
         }
 
-        [Authorize]
-        [HttpPost("add")]
-        public async Task<IActionResult> AddItem(int productId, int productQuantity)
-        {
-            Product productToAdd = await _productService.SelectByIdAsync(productId);
-            if (productToAdd == null)
-            {
-                return NotFound();
-            }
+        //[Authorize]
+        //[HttpPost("add")]
+        //public async Task<IActionResult> AddItem(int productId, int productQuantity)
+        //{
+        //    Product productToAdd = await _productService.SelectByIdAsync(productId);
+        //    if (productToAdd == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            OrderViewModel orderViewModel = await GetOrderViewModel();
+        //    OrderViewModel orderViewModel = await GetOrderViewModel();
 
-            orderViewModel.AddOrderItem(productToAdd, productQuantity);
+        //    orderViewModel.AddOrderItem(productToAdd, productQuantity);
 
-            SetOrderViewModel(orderViewModel);
+        //    SetOrderViewModel(orderViewModel);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [Authorize]
-        [HttpGet("cart")]
-        public async Task<IActionResult> GetCart()
-        {
-            OrderViewModel viewModel = await GetOrderViewModel();
+        //[Authorize]
+        //[HttpGet("cart")]
+        //public async Task<IActionResult> GetCart()
+        //{
+        //    OrderViewModel viewModel = await GetOrderViewModel();
 
-            return Ok(viewModel);
-        }
+        //    return Ok(viewModel);
+        //}
 
-        [Authorize]
-        [HttpPost("remove")]
-        public async Task<IActionResult> RemoveItem(int productId)
-        {
-            Product productToRemove = await _productService.SelectByIdAsync(productId);
-            if (productToRemove == null)
-            {
-                return NotFound();
-            }
+        //[Authorize]
+        //[HttpPost("remove")]
+        //public async Task<IActionResult> RemoveItem(int productId)
+        //{
+        //    Product productToRemove = await _productService.SelectByIdAsync(productId);
+        //    if (productToRemove == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            OrderViewModel orderViewModel = await GetOrderViewModel();
+        //    OrderViewModel orderViewModel = await GetOrderViewModel();
 
-            orderViewModel.RemoveOrderItem(productToRemove.ProductId);
+        //    orderViewModel.RemoveOrderItem(productToRemove.ProductId);
 
-            SetOrderViewModel(orderViewModel);
+        //    SetOrderViewModel(orderViewModel);
 
-            return RedirectToAction("Cart", orderViewModel);
-        }
+        //    return RedirectToAction("Cart", orderViewModel);
+        //}
 
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Place()
-        {
-            OrderViewModel orderView = await GetOrderViewModel();
-            if (orderView.OrderItems.Count == 0)
-            {
-                return RedirectToAction("Create");
-            }
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<IActionResult> Place()
+        //{
+        //    OrderViewModel orderView = await GetOrderViewModel();
+        //    if (orderView.OrderItems.Count == 0)
+        //    {
+        //        return RedirectToAction("Create");
+        //    }
 
-            string userId = _userManager.GetUserId(User);
+        //    string userId = _userManager.GetUserId(User);
 
-            Order order = _orderService.CreateOrder(orderView, userId);
-            await _orderService.AddAsync(order);
+        //    Order order = _orderService.CreateOrder(orderView, userId);
+        //    await _orderService.AddAsync(order);
 
-            RemoveOrderViewModel();
+        //    RemoveOrderViewModel();
 
-            return RedirectToAction("ViewOrders");
-        }
+        //    return RedirectToAction("ViewOrders");
+        //}
 
         [Authorize]
         [HttpGet]

@@ -1,5 +1,5 @@
 interface Category {
-  id: string;
+  categoryId: number;
   name: string;
 }
 
@@ -8,7 +8,7 @@ interface CategoryListProps {
 }
 
 function CategoryList({ categories }: CategoryListProps) {
-  const handleRemoveCategory = (categoryId: string) => {
+  const handleRemoveCategory = (categoryId: number) => {
     alert(`You are removing category with id: ${categoryId}`);
   };
 
@@ -23,23 +23,23 @@ function CategoryList({ categories }: CategoryListProps) {
         </thead>
         <tbody>
           {categories.map((category) => (
-            <tr key={category.id}>
-              <td key={category.id + category.name}>{category.name}</td>
-              <td key={category.id + "DetailsCol"}>
-                <a href="/" key={category.id + "DetailsLink"}>
+            <tr key={category.categoryId}>
+              <td key={category.categoryId + category.name}>{category.name}</td>
+              <td key={category.categoryId + "DetailsCol"}>
+                <a href="/" key={category.categoryId + "DetailsLink"}>
                   Details
                 </a>
               </td>
-              <td key={category.id + "EditCol"}>
-                <a href="/" key={category.id + "EditLink"}>
+              <td key={category.categoryId + "EditCol"}>
+                <a href="/" key={category.categoryId + "EditLink"}>
                   Edit
                 </a>
               </td>
-              <td key={category.id + "RemoveCol"}>
+              <td key={category.categoryId + "RemoveCol"}>
                 <a
                   href=""
-                  key={category.id + "RemoveLink"}
-                  onClick={() => handleRemoveCategory(category.id)}
+                  key={category.categoryId + "RemoveLink"}
+                  onClick={() => handleRemoveCategory(category.categoryId)}
                 >
                   Remove
                 </a>

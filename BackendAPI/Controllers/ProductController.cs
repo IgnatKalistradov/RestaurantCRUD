@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BackendAPI.Models.DbModels;
-using BackendAPI.Models.Services;
+using BackendAPI.Services;
 
 namespace BackendAPIAPI.Controllers
 {
