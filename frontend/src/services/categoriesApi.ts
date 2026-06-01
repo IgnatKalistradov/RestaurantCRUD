@@ -73,3 +73,25 @@ export async function deleteCategory(id: number)
 
     return result.status;
 }
+
+export async function updateCategory(id: number, name: string, description: string)
+{
+    const requestBody = {
+        id: id,
+        name: name,
+        description: description
+    };
+
+    const url = `${BASE_URL}/Category/edit/${id}`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    };
+
+    const result = await fetch(url, options);
+
+    return result.status;
+}

@@ -76,9 +76,15 @@ namespace BackendAPI.Services
             return ingredientDetails;
         }
 
-        public async Task Update(Ingredient model)
+        public async Task Update(IngredientBaseDto ingredientDto)
         {
-            await _repository.UpdateAsync(model);
+            Ingredient ingredient = new Ingredient()
+            {
+                IngredientId = ingredientDto.Id,
+                Name = ingredientDto.Name,
+                Description = ingredientDto.Description
+            };
+            await _repository.UpdateAsync(ingredient);
         }
     }
 }

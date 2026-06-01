@@ -74,3 +74,25 @@ export async function getIngredient(id: number)
 
     return {item: json.ingredient, products: json.products} as ItemDetailsProps
 }
+
+export async function updateIngredient(id: number, name: string, description: string)
+{
+    const requestBody = {
+        id: id,
+        name: name,
+        description: description
+    };
+
+    const url = `${BASE_URL}/Ingredient/edit/${id}`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    };
+
+    const result = await fetch(url, options);
+
+    return result.status;
+}

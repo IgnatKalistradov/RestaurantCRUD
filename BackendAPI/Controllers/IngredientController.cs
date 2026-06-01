@@ -44,16 +44,24 @@ namespace BackendAPI.Controllers
         }
 
         [HttpPost("edit/{id:int}")]
-        public async Task<IActionResult> Edit([Bind("IngredientId", "Name", "Description")] Ingredient ingredient, int id)
+        public async Task<IActionResult> Edit(IngredientBaseDto ingredientDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ingredient);
+                return BadRequest(ingredientDto);
             }
 
-            await _ingredientService.Update(ingredient);
+            try
+            {
+                await _ingredientService.Update(ingredientDto);
 
-            return RedirectToAction("Index");
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            
         }
 
 

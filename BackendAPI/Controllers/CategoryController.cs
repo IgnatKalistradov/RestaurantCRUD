@@ -61,16 +61,25 @@ namespace BackendAPI.Controllers
         }
 
         [HttpPost("edit/{id:int}")]
-        public async Task<IActionResult> Edit([Bind("CategoryId", "Name", "Description")] Category category, int id)
+        public async Task<IActionResult> Edit(CategoryBaseDto categoryDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(category);
+                return BadRequest(categoryDto);
             }
 
-            await _categoryService.UpdateAsync(category);
+            try
+            {
+                await _categoryService.UpdateAsync(categoryDto);
 
-            return RedirectToAction("Index");
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+           
         }
 
 

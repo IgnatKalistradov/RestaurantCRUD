@@ -35,7 +35,7 @@ function IngredientCategoryForm(props: AddPageProps) {
       <div className="mb-3">
         <label className="form-label">Name</label>
         <input
-          placeholder={name}
+          value={name}
           type="text"
           className="form-control"
           onChange={handleNameChange}
@@ -46,7 +46,7 @@ function IngredientCategoryForm(props: AddPageProps) {
         <input
           type="text"
           className="form-control"
-          placeholder={description}
+          value={description}
           onChange={handleDescriptionChange}
         />
       </div>
@@ -55,7 +55,7 @@ function IngredientCategoryForm(props: AddPageProps) {
         className="btn btn-primary"
         onClick={handleFormSubmit}
       >
-        Create
+        Submit
       </button>
     </form>
   );

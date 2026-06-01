@@ -12,6 +12,8 @@ import AddIngredient from "./pages/ingredients/addIngredient";
 import AddCategory from "./pages/categories/addCategory";
 import DetailsCategory from "./pages/categories/detailsCategory";
 import DetailsIngredient from "./pages/ingredients/detailsIngredients";
+import EditCategory from "./pages/categories/editCategory";
+import EditIngredient from "./pages/ingredients/editIngredient";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
             path="/details-ingredient/:id"
             element={<DetailsIngredient />}
           />
+          <Route path="/edit-category/:id" element={<EditCategory />} />
+          <Route path="/edit-ingredient/:id" element={<EditIngredient />} />
           <Route path="/add-dish" element={<AddDish />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="new-order" element={<NewOrder />} />

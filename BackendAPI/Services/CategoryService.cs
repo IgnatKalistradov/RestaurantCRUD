@@ -39,9 +39,16 @@ namespace BackendAPI.Services
             });
         }
 
-        public async Task UpdateAsync(Category product)
+        public async Task UpdateAsync(CategoryBaseDto categoryDto)
         {
-            await _categoryRepository.UpdateAsync(product);
+            Category category = new Category()
+            {
+                CategoryId = categoryDto.Id,
+                Name = categoryDto.Name,
+                Description = categoryDto.Description
+            };
+
+            await _categoryRepository.UpdateAsync(category);
         }
 
         public async Task DeleteAsync(int id)
