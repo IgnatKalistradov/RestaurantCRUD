@@ -75,16 +75,16 @@ namespace BackendAPI.Controllers
 
 
         [HttpPost("delete/{id:int}")]
-        public async Task<IActionResult> Delete([Bind("CategoryId", "Name", "Description")] Category category, int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(category);
+                return BadRequest();
             }
 
-            await _categoryService.DeleteAsync(category.CategoryId);
+            await _categoryService.DeleteAsync(id);
 
-            return RedirectToAction("Index");
+            return NoContent();
         }
     }
 }

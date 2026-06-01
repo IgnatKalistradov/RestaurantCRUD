@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import IngredientCategoryForm from "../../components/ingredientCategoryForm";
-import addIngredient from "../../services/ingredientsApi";
 import { useState } from "react";
+import { addIngredient } from "../../services/ingredientsApi";
 
 function AddIngredient() {
   const [error, setError] = useState("");

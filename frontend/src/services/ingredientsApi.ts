@@ -1,8 +1,10 @@
-const BASE_URL = 'https://localhost:7174';
+import type { ItemDetailsProps } from "../components/itemDetails";
+
+const BASE_URL = 'https://localhost:7174/api';
 
 export async function addIngredient(name: string, description: string)
 {
-    const url = BASE_URL + '/api/Ingredient';
+    const url = BASE_URL + '/Ingredient';
     const payload = {
         name: name,
         description: description
@@ -22,7 +24,7 @@ export async function addIngredient(name: string, description: string)
 
 export async function getIngredients()
 {
-    const url = BASE_URL + '/api/Ingredient'
+    const url = BASE_URL + '/Ingredient'
     const options = {
         method: `GET`,
         headers: {
@@ -43,13 +45,12 @@ export async function getIngredients()
 
 export async function deleteIngredient(id: number)
 {
-    const url = `${BASE_URL}/api/Ingredient/delete/${id}`;
+    const url = `${BASE_URL}/Ingredient/delete/${id}`;
     const options = {
         method: "POST",
         headers: {
             'Content-Type': "application/json"
         },
-        body: JSON.stringify(id)
     };
 
     const response = await fetch(url, options);
@@ -57,4 +58,19 @@ export async function deleteIngredient(id: number)
     return response.status;
 }
 
-export default addIngredient;
+export async function getIngredient(id: number)
+{
+    const url = `${BASE_URL}/Ingredient/${id}`;
+    const options = {
+        method: "GET",
+        headers: {
+            'accept': "application/json"
+        }
+    }
+
+    const response = await fetch(url, options);
+
+    const json = await response.json();
+
+    return {item: json.ingredient, products: json.products} as ItemDetailsProps
+}

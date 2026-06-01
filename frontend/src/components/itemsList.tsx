@@ -1,16 +1,11 @@
 import { Link } from "react-router-dom";
-
-export interface ListItem {
-  id: number;
-  name: string;
-  description: string;
-}
+import type { Item } from "../types/item";
 
 interface ItemsListProps {
-  items: ListItem[];
+  items: Item[];
   detailsBaseUrl: string;
   editBaseUrl: string;
-  handleRemoveItem: (item: ListItem) => void;
+  handleRemoveItem: (item: Item) => void;
 }
 
 function ItemsList({
@@ -21,7 +16,7 @@ function ItemsList({
 }: ItemsListProps) {
   const handleRemoveLinkClick = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    item: ListItem,
+    item: Item,
   ) => {
     event.preventDefault();
     handleRemoveItem(item);

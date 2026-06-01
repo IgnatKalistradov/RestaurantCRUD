@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import CategoryList from "../../components/categoryList";
-import { getCategories } from "../../services/categoriesApi";
-import ItemsList, { type ListItem } from "../../components/itemsList";
+import { deleteCategory, getCategories } from "../../services/categoriesApi";
+import ItemsList from "../../components/itemsList";
+import type { Item } from "../../types/item";
+import DeleteForm from "../../components/deleteForm";
 
 function Categories() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<Item | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -21,14 +24,41 @@ function Categories() {
       }
     };
     fetchCategories();
-  }, []);
+  }, [isLoading]);
 
-  const handleRemoveItem = (item: ListItem) => {
-    console.log(`Remove ${item.id}?`);
+  const handleRemoveButtonClick = (item: Item) => {
+    setShowModal(true);
+    setCategoryToDelete(item);
+  };
+
+  const handleRemoveItemConfirm = async () => {
+    setShowModal(false);
+
+    if (categoryToDelete === null) return;
+
+    try {
+      const status = await deleteCategory(categoryToDelete.id);
+
+      if (status != 204) throw new Error();
+
+      setLoading(true);
+    } catch {}
   };
 
   return (
     <>
+      {categoryToDelete != null && (
+        <DeleteForm
+          isShown={showModal}
+          onConfirm={handleRemoveItemConfirm}
+          onClose={() => {
+            setShowModal(false);
+            setCategoryToDelete(null);
+          }}
+          itemName={categoryToDelete.name}
+        />
+      )}
+
       <h2>Categories page</h2>
       <a href="/add-category">Add category</a>
       {isLoading ? (
@@ -38,7 +68,7 @@ function Categories() {
           items={categories}
           detailsBaseUrl="/details-category"
           editBaseUrl="/edit-category"
-          handleRemoveItem={handleRemoveItem}
+          handleRemoveItem={handleRemoveButtonClick}
         />
       ) : (
         <p>{error}</p>

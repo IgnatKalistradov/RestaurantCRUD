@@ -1,3 +1,5 @@
+import type { ItemDetailsProps } from "../components/itemDetails";
+
 const BASE_URL = `https://localhost:7174/api`;
 
 export async function addCategory(name: string, description: string)
@@ -40,4 +42,34 @@ export async function getCategories()
     return response.json();
 }
 
-export default addCategory;
+export async function getCategory(id: number)
+{
+    const url = `${BASE_URL}/Category/${id}`;
+    const options = {
+        method: "GET",
+        headers: {
+            "accept": "application/json"
+        }
+    }
+
+    const result = await fetch(url, options);
+
+    const json = await result.json();
+
+    return {item: json.category, products: json.products} as ItemDetailsProps;
+}
+
+export async function deleteCategory(id: number)
+{
+    const url = `${BASE_URL}/Category/delete/${id}`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+
+    const result = await fetch(url, options);
+
+    return result.status;
+}

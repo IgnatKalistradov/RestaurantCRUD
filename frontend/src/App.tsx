@@ -5,12 +5,13 @@ import Dishes from "./pages/dishes";
 import Categories from "./pages/categories/categories";
 import Navbar from "./components/navbar";
 import AddEditPage from "./pages/add-edit-page";
-import addIngredient from "./services/ingredientsApi";
 import AddDish from "./pages/add-dish";
 import Orders from "./pages/orders";
 import NewOrder from "./pages/new-order";
 import AddIngredient from "./pages/ingredients/addIngredient";
 import AddCategory from "./pages/categories/addCategory";
+import DetailsCategory from "./pages/categories/detailsCategory";
+import DetailsIngredient from "./pages/ingredients/detailsIngredients";
 
 function App() {
   return (
@@ -23,9 +24,10 @@ function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/add-ingredient" element={<AddIngredient />} />
           <Route path="/add-category" element={<AddCategory />} />
+          <Route path="/details-category/:id" element={<DetailsCategory />} />
           <Route
-            path="/edit-ingredient/:id"
-            element={<AddEditPage type="ingredient" onSubmit={addIngredient} />}
+            path="/details-ingredient/:id"
+            element={<DetailsIngredient />}
           />
           <Route path="/add-dish" element={<AddDish />} />
           <Route path="/orders" element={<Orders />} />

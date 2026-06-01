@@ -66,8 +66,7 @@ namespace BackendAPI.Services
                 Products = category.Products.Select(prod => new ProductBaseDto()
                 {
                     Id = prod.ProductId,
-                    Name = prod.Name,
-                    Description = prod.Description
+                    Name = prod.Name
                 })
             };
         }
