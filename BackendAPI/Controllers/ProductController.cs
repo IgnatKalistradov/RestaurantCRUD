@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BackendAPI.Models.DbModels;
 using BackendAPI.Services;
+using BackendAPI.Models.DTO.ProductsDto;
 
 namespace BackendAPIAPI.Controllers
 {
@@ -22,15 +23,22 @@ namespace BackendAPIAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Product product, int[] ingredientIds)
+        public async Task<IActionResult> Add(ProductCreateDto productDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _productService.AddAsync(product, ingredientIds);
-                return CreatedAtAction("Index", product);
+                return BadRequest(productDto);
             }
 
-            return BadRequest();
+            try
+            {
+                Product product = await _productService.AddAsync(productDto);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("edit/{id:int}")]

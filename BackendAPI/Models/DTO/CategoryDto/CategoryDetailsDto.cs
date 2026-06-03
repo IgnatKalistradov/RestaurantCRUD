@@ -1,4 +1,6 @@
-﻿namespace BackendAPI.Models.DTO.CategoryDto
+﻿using BackendAPI.Models.DTO.ProductsDto;
+
+namespace BackendAPI.Models.DTO.CategoryDto
 {
     public class CategoryDetailsDto
     {

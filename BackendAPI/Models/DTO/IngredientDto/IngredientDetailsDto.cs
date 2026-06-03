@@ -1,4 +1,6 @@
-﻿namespace BackendAPI.Models.DTO.IngredientDto
+﻿using BackendAPI.Models.DTO.ProductsDto;
+
+namespace BackendAPI.Models.DTO.IngredientDto
 {
     public class IngredientDetailsDto
     {

@@ -1,11 +1,9 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Ingredients from "./pages/ingredients/ingredients";
-import Dishes from "./pages/dishes";
 import Categories from "./pages/categories/categories";
 import Navbar from "./components/navbar";
-import AddEditPage from "./pages/add-edit-page";
-import AddDish from "./pages/add-dish";
+import AddDish from "./pages/dishes/add-dish";
 import Orders from "./pages/orders";
 import NewOrder from "./pages/new-order";
 import AddIngredient from "./pages/ingredients/addIngredient";
@@ -14,6 +12,7 @@ import DetailsCategory from "./pages/categories/detailsCategory";
 import DetailsIngredient from "./pages/ingredients/detailsIngredients";
 import EditCategory from "./pages/categories/editCategory";
 import EditIngredient from "./pages/ingredients/editIngredient";
+import Dishes from "./pages/dishes/dishes";
 
 function App() {
   return (

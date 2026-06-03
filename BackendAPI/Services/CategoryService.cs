@@ -1,7 +1,7 @@
 ﻿using BackendAPI.Models;
 using BackendAPI.Models.DbModels;
-using BackendAPI.Models.DTO;
 using BackendAPI.Models.DTO.CategoryDto;
+using BackendAPI.Models.DTO.ProductsDto;
 
 namespace BackendAPI.Services
 {

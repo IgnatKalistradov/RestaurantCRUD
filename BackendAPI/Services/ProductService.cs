@@ -1,5 +1,6 @@
 ﻿using BackendAPI.Models;
 using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DTO.ProductsDto;
 
 namespace BackendAPI.Services
 {
@@ -12,9 +13,23 @@ namespace BackendAPI.Services
             _productRepository = repository;
             _imageService = imageService;
         }
-        public async Task AddAsync(Product product)
+        public async Task<Product> AddAsync(ProductCreateDto productDto)
         {
+            Product product = new Product()
+            {
+                ProductId = productDto.Id,
+                Name = productDto.Name,
+                Description = productDto.Description,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+                CategoryId = productDto.CategoryId,
+            };
+
+            product.SetIngredients(productDto.IngredientIds);
+
             await _productRepository.AddAsync(product);
+
+            return product;
         }
 
         public async Task AddAsync(Product product, int[] ingredientIds)
@@ -31,9 +46,17 @@ namespace BackendAPI.Services
             await _productRepository.AddAsync(product);
         }
 
-        public async Task<IEnumerable<Product>> SelectAllAsync()
+        public async Task<IEnumerable<ProductInfoDto>> SelectAllAsync()
         {
-            return await _productRepository.SelectAllAsync();
+            IEnumerable<Product> products = await _productRepository.SelectAllAsync();
+            return products.Select(prod => new ProductInfoDto()
+            {
+                Id = prod.ProductId,
+                Name = prod.Name,
+                Description = prod.Description,
+                Price = prod.Price,
+                Stock = prod.Stock
+            });
         }
 
         public async Task UpdateAsync(Product product, int[] ingredientIds)

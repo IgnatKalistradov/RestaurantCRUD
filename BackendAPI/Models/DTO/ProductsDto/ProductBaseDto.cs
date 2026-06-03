@@ -1,4 +1,4 @@
-﻿namespace BackendAPI.Models.DTO
+﻿namespace BackendAPI.Models.DTO.ProductsDto
 {
     public class ProductBaseDto
     {
