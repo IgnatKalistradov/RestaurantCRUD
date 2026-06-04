@@ -21,7 +21,7 @@ function DishCard(dish: DishCardProps) {
         <a href={`/dish/edit/${dish.id}`} className="btn btn-outline-primary">
           Edit
         </a>
-        <a href={`/details-dish/${dish.id}`} className="btn btn-outline-dark">
+        <a href={`/dish/${dish.id}`} className="btn btn-outline-dark">
           Details
         </a>
         <a
