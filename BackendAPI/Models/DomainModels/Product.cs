@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using BackendAPI.Models.DTO.ProductsDto;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackendAPI.Models.DbModels
@@ -34,6 +35,15 @@ namespace BackendAPI.Models.DbModels
             this.Stock = product.Stock;
             this.CategoryId = product.CategoryId;
             this.ImageUrl = product.ImageUrl;
+        }
+
+        public void Copy(ProductUpsertDto productDto)
+        {
+            this.Name = productDto.Name;
+            this.Description = productDto.Description;
+            this.Price = productDto.Price;
+            this.Stock = productDto.Stock;
+            this.CategoryId = productDto.CategoryId;
         }
 
         public void SetIngredients(IEnumerable<int> ingredientIds)

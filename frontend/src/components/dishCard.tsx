@@ -4,6 +4,7 @@ interface DishCardProps {
   description: string;
   price: number;
   stock: number;
+  onDelete: () => void;
 }
 
 function DishCard(dish: DishCardProps) {
@@ -17,10 +18,20 @@ function DishCard(dish: DishCardProps) {
         <a href="#" className="btn btn-primary">
           Add to cart
         </a>
+        <a href={`/dish/edit/${dish.id}`} className="btn btn-outline-primary">
+          Edit
+        </a>
         <a href={`/details-dish/${dish.id}`} className="btn btn-outline-dark">
           Details
         </a>
-        <a href="#" className="btn btn-danger">
+        <a
+          onClick={(e) => {
+            e.preventDefault;
+            dish.onDelete();
+          }}
+          href="#"
+          className="btn btn-danger"
+        >
           Remove
         </a>
       </div>

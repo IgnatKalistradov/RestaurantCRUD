@@ -1,6 +1,6 @@
 ﻿namespace BackendAPI.Models.DTO.ProductsDto
 {
-    public class ProductCreateDto
+    public class ProductUpsertDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

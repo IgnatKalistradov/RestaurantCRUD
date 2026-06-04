@@ -22,8 +22,22 @@ namespace BackendAPIAPI.Controllers
             return Ok(await _productService.SelectAllAsync());
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> Index(int id)
+        {
+            try
+            {
+                var product = await _productService.SelectByIdAsync(id);
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Add(ProductCreateDto productDto)
+        public async Task<IActionResult> Add(ProductUpsertDto productDto)
         {
             if (!ModelState.IsValid)
             {
@@ -42,15 +56,28 @@ namespace BackendAPIAPI.Controllers
         }
 
         [HttpPost("edit/{id:int}")]
-        public async Task<IActionResult> Edit(Product product, int[] ingredientIds, int productId)
+        public async Task<IActionResult> Edit(ProductUpsertDto productDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _productService.UpdateAsync(product, ingredientIds);
-                return Ok();
+                return BadRequest();
+                
             }
 
-            return BadRequest();
+            try
+            {
+                await _productService.UpdateAsync(productDto);
+                return Ok();
+            }
+            catch (InvalidDataException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            
         }
 
         [HttpPost("delete/{id:int}")]
@@ -59,7 +86,7 @@ namespace BackendAPIAPI.Controllers
             try
             {
                 await _productService.DeleteAsync(id);
-                return Ok();
+                return NoContent();
             }
             catch (Exception ex)
             {

@@ -13,6 +13,7 @@ import DetailsIngredient from "./pages/ingredients/detailsIngredients";
 import EditCategory from "./pages/categories/editCategory";
 import EditIngredient from "./pages/ingredients/editIngredient";
 import Dishes from "./pages/dishes/dishes";
+import EditDish from "./pages/dishes/editDish";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/edit-category/:id" element={<EditCategory />} />
           <Route path="/edit-ingredient/:id" element={<EditIngredient />} />
           <Route path="/add-dish" element={<AddDish />} />
+          <Route path="/dish/edit/:id" element={<EditDish />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="new-order" element={<NewOrder />} />
         </Routes>

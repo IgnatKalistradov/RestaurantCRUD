@@ -1,5 +1,7 @@
 ﻿using BackendAPI.Models;
 using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DTO.CategoryDto;
+using BackendAPI.Models.DTO.IngredientDto;
 using BackendAPI.Models.DTO.ProductsDto;
 
 namespace BackendAPI.Services
@@ -13,7 +15,7 @@ namespace BackendAPI.Services
             _productRepository = repository;
             _imageService = imageService;
         }
-        public async Task<Product> AddAsync(ProductCreateDto productDto)
+        public async Task<Product> AddAsync(ProductUpsertDto productDto)
         {
             Product product = new Product()
             {
@@ -59,31 +61,19 @@ namespace BackendAPI.Services
             });
         }
 
-        public async Task UpdateAsync(Product product, int[] ingredientIds)
+        public async Task UpdateAsync(ProductUpsertDto productDto)
         {
-            var query = new QueryOptions<Product>();
-            query.AddInclude("ProductIngredients.Ingredient");
+            QueryOptions<Product> options = new QueryOptions<Product>();
+            options.AddInclude("ProductIngredients.Ingredient");
 
-            Product existingProduct = await _productRepository.SelectByIdAsync(product.ProductId, query);
+            Product existingProduct = await _productRepository.SelectByIdAsync(productDto.Id, options);
             if(existingProduct == null)
             {
                 throw new InvalidDataException("Product was not found");
             }
 
-            if (product.ImageFile != null)
-            {
-                string imageUrl = await _imageService.SaveImageToRoot(product.ImageFile);
-
-                if(!string.IsNullOrEmpty(existingProduct.ImageUrl))
-                {
-                    _imageService.DeleteImageFromRoot(existingProduct.ImageUrl);
-                }
-
-                product.ImageUrl = imageUrl;
-            }
-
-            existingProduct.Copy(product);
-            existingProduct.SetIngredients(ingredientIds);
+            existingProduct.Copy(productDto);
+            existingProduct.SetIngredients(productDto.IngredientIds);
 
             await _productRepository.UpdateAsync(existingProduct);
         }
@@ -98,14 +88,34 @@ namespace BackendAPI.Services
             await _productRepository.DeleteAsync(id);
         }
 
-        public async Task<Product> SelectByIdAsync(int id)
+        public async Task<ProductDetailsDto> SelectByIdAsync(int id)
         {
-            return await _productRepository.SelectByIdAsync(id);
-        }
-        public async Task<Product> SelectByIdAsync(int id, QueryOptions<Product> options)
-        {
-            return await _productRepository.SelectByIdAsync(id, options);
-        }
+            QueryOptions<Product> options = new QueryOptions<Product>();
+            options.AddInclude("Category");
+            options.AddInclude("ProductIngredients.Ingredient");
 
+            Product product = await _productRepository.SelectByIdAsync(id, options);
+            ProductDetailsDto productDto = new ProductDetailsDto()
+            {
+                Id = id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Stock = product.Stock,
+                Category = new CategoryBaseDto()
+                {
+                    Id = product.CategoryId,
+                    Name = product.Category.Name,
+                    Description = product.Category.Description
+                },
+                Ingredients = product.ProductIngredients.Select(pi => new IngredientBaseDto()
+                {
+                    Id = pi.IngredientId,
+                    Name = pi.Ingredient.Name,
+                    Description = pi.Ingredient.Description
+                })
+            };
+            return productDto;
+        }
     }
 }

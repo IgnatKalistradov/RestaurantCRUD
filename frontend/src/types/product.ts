@@ -1,3 +1,5 @@
+import type { Item } from "./item"
+
 export interface ProductBase
 {
     id: number,
@@ -11,4 +13,15 @@ export interface ProductInfo
     description: string,
     price: number,
     stock: number
+}
+
+export interface ProductDetails
+{
+    id: number,
+    name: string,
+    description: string,
+    price: number,
+    stock: number,
+    category: Item,
+    ingredients: Item[]
 }
