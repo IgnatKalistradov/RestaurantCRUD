@@ -1,5 +1,6 @@
 ﻿using BackendAPI.Models;
 using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DTO;
 
 
 
@@ -35,14 +36,35 @@ namespace BackendAPI.Services
 
         //    return order;
         //}
-        public async Task AddAsync(Order order)
+        public async Task AddAsync(IEnumerable<OrderItemDto> orderItems)
         {
+            Order order = new Order()
+            {
+                OrderDate = DateTime.Now,
+
+            };
+            order.SetOrderItems(orderItems);
             await _repository.AddAsync(order);
         }
 
-        public async Task<IEnumerable<Order>> SelectAllAsync()
+        public async Task<IEnumerable<OrderDto>> SelectAllAsync()
         {
-            return await _repository.SelectAllAsync();
+            QueryOptions<Order> options = new QueryOptions<Order>();
+            options.AddInclude("OrderItems.Product");
+            IEnumerable<Order> orders = await _repository.SelectAsync(options);
+
+            return orders.Select(order => new OrderDto()
+            {
+                Id = order.OrderId,
+                CreateDate = order.OrderDate,
+                orderItems = order.OrderItems.Select(item => new OrderItemDto()
+                {
+                    Id = item.ProductId,
+                    Name = item.Product.Name,
+                    Amount = item.Quantity,
+                    Price = item.Price
+                })
+            });
         }
 
         public async Task<IEnumerable<Order>> SelectAsync(QueryOptions<Order> options)

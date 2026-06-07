@@ -3,6 +3,7 @@ import DishCard from "../../components/dishCard";
 import type { ProductInfo } from "../../types/product";
 import { deleteDish, getDishes } from "../../services/dishesApi";
 import DeleteForm from "../../components/deleteForm";
+import { useCart } from "../../hooks/useCart";
 
 function Dishes() {
   const [dishes, setDishes] = useState<ProductInfo[]>();
@@ -10,6 +11,7 @@ function Dishes() {
   const [error, setError] = useState("");
   const [isModalVisible, setModalVisibility] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<ProductInfo | null>(null);
+  const cart = useCart();
 
   useEffect(() => {
     const fetchDishes = async () => {
@@ -73,6 +75,7 @@ function Dishes() {
                 setItemToDelete(dish);
                 setModalVisibility(true);
               }}
+              onAddToCart={cart.addItem}
             />
           ))
         )}

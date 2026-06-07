@@ -19,9 +19,6 @@ namespace BackendAPI.Models.DbModels
         public int CategoryId { get; set; }
         [ValidateNever]
         public Category? Category { get; set; }
-        [NotMapped]
-        public IFormFile? ImageFile { get; set; }
-        public string ImageUrl { get; set; } = "https://placehold.co/600x400";
         [ValidateNever]
         public ICollection<OrderItem>? OrderItems { get; set; }
         [ValidateNever]
@@ -34,7 +31,6 @@ namespace BackendAPI.Models.DbModels
             this.Price = product.Price;
             this.Stock = product.Stock;
             this.CategoryId = product.CategoryId;
-            this.ImageUrl = product.ImageUrl;
         }
 
         public void Copy(ProductUpsertDto productDto)

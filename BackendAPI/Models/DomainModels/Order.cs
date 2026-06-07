@@ -1,4 +1,6 @@
-﻿namespace BackendAPI.Models.DbModels
+﻿using BackendAPI.Models.DTO;
+
+namespace BackendAPI.Models.DbModels
 {
     public class Order
     {
@@ -9,9 +11,22 @@
 
         public int OrderId { get; set; }
         public DateTime OrderDate { get; set; }
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
-        public decimal TotalAmount { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; }
+        public decimal TotalAmount { get; private set; }
+        public ICollection<OrderItem> OrderItems { get; private set; }
+
+        public void SetOrderItems(IEnumerable<OrderItemDto> itemDtos)
+        {
+            foreach(OrderItemDto itemDto in itemDtos)
+            {
+                OrderItems.Add(new OrderItem()
+                {
+                    ProductId = itemDto.Id,
+                    Quantity = itemDto.Amount,
+                    Price = itemDto.Price
+                });
+            }
+
+            this.TotalAmount = OrderItems.Select(item => item.Price * item.Quantity).Sum();
+        }
     }
 }

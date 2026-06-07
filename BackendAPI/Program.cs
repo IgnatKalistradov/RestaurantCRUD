@@ -32,7 +32,6 @@ namespace BackendAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            builder.Services.AddScoped(typeof(IImageService), typeof(ImageService));
             builder.Services.AddScoped<IngredientService>();
             builder.Services.AddScoped<ProductService>();
             builder.Services.AddScoped<CategoryService>();
@@ -50,9 +49,6 @@ namespace BackendAPI
             app.UseCors("AllowFrontend");
 
             app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
 
             app.MapControllers();
 

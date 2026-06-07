@@ -1,3 +1,5 @@
+import { useCart, type ShoppingCartItem } from "../hooks/useCart";
+
 interface DishCardProps {
   id: number;
   name: string;
@@ -5,6 +7,7 @@ interface DishCardProps {
   price: number;
   stock: number;
   onDelete: () => void;
+  onAddToCart: (item: ShoppingCartItem) => void;
 }
 
 function DishCard(dish: DishCardProps) {
@@ -15,7 +18,17 @@ function DishCard(dish: DishCardProps) {
         <p className="card-text">{dish.description}</p>
         <p>Price: {dish.price}</p>
         <p>Stock: {dish.stock}</p>
-        <a href="#" className="btn btn-primary">
+        <a
+          className="btn btn-primary"
+          onClick={() =>
+            dish.onAddToCart({
+              id: dish.id,
+              name: dish.name,
+              amount: 1,
+              price: dish.price,
+            })
+          }
+        >
           Add to cart
         </a>
         <a href={`/dish/edit/${dish.id}`} className="btn btn-outline-primary">
