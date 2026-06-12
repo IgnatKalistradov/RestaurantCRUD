@@ -1,5 +1,5 @@
 ﻿using BackendAPI.Models;
-using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DomainModels;
 using BackendAPI.Models.DTO.IngredientDto;
 using BackendAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +26,7 @@ namespace BackendAPI.Controllers
         public async Task<IActionResult> Details(int id)
         {
             QueryOptions<Ingredient> queryOptions = new QueryOptions<Ingredient>();
-            queryOptions.AddInclude("ProductIngredients.Product");
+            queryOptions.AddInclude("Dishes");
             return Ok(await _ingredientService.SelectByIdAsync(id, queryOptions));
         }
 
@@ -40,7 +40,7 @@ namespace BackendAPI.Controllers
 
             Ingredient ingredient = await _ingredientService.AddAsync(ingredientDto);
 
-            return CreatedAtAction(nameof(this.Details), new {id = ingredient.IngredientId}, ingredient);
+            return CreatedAtAction(nameof(this.Details), new {id = ingredient.Id}, ingredient);
         }
 
         [HttpPost("edit/{id:int}")]

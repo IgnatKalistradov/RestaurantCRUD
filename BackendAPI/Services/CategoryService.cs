@@ -1,7 +1,7 @@
 ﻿using BackendAPI.Models;
-using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DomainModels;
 using BackendAPI.Models.DTO.CategoryDto;
-using BackendAPI.Models.DTO.ProductsDto;
+using BackendAPI.Models.DTO.DishesDto;
 
 namespace BackendAPI.Services
 {
@@ -33,7 +33,7 @@ namespace BackendAPI.Services
 
             return categories.Select(cat => new CategoryBaseDto()
             {
-                Id = cat.CategoryId,
+                Id = cat.Id,
                 Name = cat.Name,
                 Description = cat.Description
             });
@@ -43,7 +43,7 @@ namespace BackendAPI.Services
         {
             Category category = new Category()
             {
-                CategoryId = categoryDto.Id,
+                Id = categoryDto.Id,
                 Name = categoryDto.Name,
                 Description = categoryDto.Description
             };
@@ -66,14 +66,14 @@ namespace BackendAPI.Services
             return new CategoryDetailsDto() {
                 Category = new CategoryBaseDto()
                 {
-                    Id = category.CategoryId,
+                    Id = category.Id,
                     Name = category.Name,
                     Description = category.Description
                 },
-                Products = category.Products.Select(prod => new ProductBaseDto()
+                Dishes = category.Dishes.Select(dish => new DishBaseDto()
                 {
-                    Id = prod.ProductId,
-                    Name = prod.Name
+                    Id = dish.Id,
+                    Name = dish.Name
                 })
             };
         }

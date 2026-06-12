@@ -9,5 +9,6 @@
         Task DeleteAsync(int id);
         Task<TModel> SelectByIdAsync(int id);
         Task<TModel> SelectByIdAsync(int id, QueryOptions<TModel> options);
+        Task<IEnumerable<TModel>> SelectByIdsAsync(IEnumerable<int> ids);
     }
 }

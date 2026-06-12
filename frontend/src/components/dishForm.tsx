@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Item } from "../types/item";
-import type { ProductInfo } from "../types/product";
+import type { DishInfo } from "../types/product";
 
 interface DishFormProps {
   name?: string;

@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using System;
+using System.Collections.Generic;
 
-namespace BackendAPI.Models.DbModels
+namespace BackendAPI.Models.DomainModels;
+
+public partial class Ingredient
 {
-    public class Ingredient
-    {
-        public int IngredientId { get; set; }
-        public string Name { get; set; }
-        public string? Description { get; set; }
+    public int Id { get; set; }
 
-        [ValidateNever]
-        public ICollection<ProductIngredient>? ProductIngredients { get; set; }
-    }
+    public string Name { get; set; } = null!;
+
+    public string Description { get; set; } = null!;
+
+    public virtual ICollection<Dish> Dishes { get; set; } = new List<Dish>();
 }

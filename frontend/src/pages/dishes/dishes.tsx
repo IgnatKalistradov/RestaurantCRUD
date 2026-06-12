@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import DishCard from "../../components/dishCard";
-import type { ProductInfo } from "../../types/product";
+import type { DishInfo } from "../../types/product";
 import { deleteDish, getDishes } from "../../services/dishesApi";
 import DeleteForm from "../../components/deleteForm";
 import { useCart } from "../../hooks/useCart";
 
 function Dishes() {
-  const [dishes, setDishes] = useState<ProductInfo[]>();
+  const [dishes, setDishes] = useState<DishInfo[]>();
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isModalVisible, setModalVisibility] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<ProductInfo | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<DishInfo | null>(null);
   const cart = useCart();
 
   useEffect(() => {

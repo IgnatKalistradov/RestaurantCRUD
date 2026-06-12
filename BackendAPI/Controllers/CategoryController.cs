@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BackendAPI.Models;
-using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DomainModels;
 using BackendAPI.Services;
 using BackendAPI.Models.DTO.CategoryDto;
 
@@ -26,7 +26,7 @@ namespace BackendAPI.Controllers
         public async Task<IActionResult> Details(int id)
         {
             QueryOptions<Category> queryOptions = new QueryOptions<Category>();
-            queryOptions.AddInclude("Products");
+            queryOptions.AddInclude("Dishes");
 
             try
             {
@@ -52,7 +52,7 @@ namespace BackendAPI.Controllers
             {
                 Category category = await _categoryService.AddAsync(categoryDto);
 
-                return CreatedAtAction(nameof(this.Details), new {id = category.CategoryId}, category);
+                return CreatedAtAction(nameof(this.Details), new {id = category.Id}, category);
             }
             catch (Exception ex)
             {

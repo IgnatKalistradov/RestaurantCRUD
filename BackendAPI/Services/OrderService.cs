@@ -1,5 +1,5 @@
 ﻿using BackendAPI.Models;
-using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DomainModels;
 using BackendAPI.Models.DTO;
 
 
@@ -14,33 +14,11 @@ namespace BackendAPI.Services
         {
             _repository = repository;
         }
-
-        //public Order CreateOrder(OrderViewModel orderView, string userId)
-        //{
-        //    Order order = new Order()
-        //    {
-        //        OrderDate = DateTime.Now,
-        //        TotalAmount = orderView.TotalAmount,
-        //        UserId = userId
-        //    };
-
-        //    foreach(var orderViewItem in orderView.OrderItems)
-        //    {
-        //        order.OrderItems.Add(new OrderItem()
-        //        {
-        //            ProductId = orderViewItem.ProductId,
-        //            Quantity = orderViewItem.Quantity,
-        //            Price = orderViewItem.PricePerUnit
-        //        });
-        //    }
-
-        //    return order;
-        //}
         public async Task AddAsync(IEnumerable<OrderItemDto> orderItems)
         {
             Order order = new Order()
             {
-                OrderDate = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
 
             };
             order.SetOrderItems(orderItems);
@@ -50,19 +28,19 @@ namespace BackendAPI.Services
         public async Task<IEnumerable<OrderDto>> SelectAllAsync()
         {
             QueryOptions<Order> options = new QueryOptions<Order>();
-            options.AddInclude("OrderItems.Product");
+            options.AddInclude("OrderItems.Dish");
             IEnumerable<Order> orders = await _repository.SelectAsync(options);
 
             return orders.Select(order => new OrderDto()
             {
-                Id = order.OrderId,
-                CreateDate = order.OrderDate,
+                Id = order.Id,
+                CreateDate = order.CreatedAt,
                 orderItems = order.OrderItems.Select(item => new OrderItemDto()
                 {
-                    Id = item.ProductId,
-                    Name = item.Product.Name,
+                    Id = item.DishId,
+                    Name = item.Dish.Name,
                     Amount = item.Quantity,
-                    Price = item.Price
+                    Price = item.UnitPrice
                 })
             });
         }

@@ -1,12 +1,12 @@
 import type { Item } from "./item"
 
-export interface ProductBase
+export interface DishBase
 {
     id: number,
     name: string,
 }
 
-export interface ProductInfo
+export interface DishInfo
 {
     id: number,
     name: string,

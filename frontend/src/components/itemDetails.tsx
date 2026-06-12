@@ -1,12 +1,12 @@
 import type { Item } from "../types/item";
-import type { ProductBase } from "../types/product";
+import type { DishBase } from "../types/product";
 
 export interface ItemDetailsProps {
   item: Item;
-  products: ProductBase[];
+  dishes: DishBase[];
 }
 
-function ItemDetails({ item, products }: ItemDetailsProps) {
+function ItemDetails({ item, dishes }: ItemDetailsProps) {
   return (
     <div>
       <h2>{item.name}</h2>
@@ -15,11 +15,12 @@ function ItemDetails({ item, products }: ItemDetailsProps) {
 
       <h6>Dishes:</h6>
       <ul className="list-group">
-        {products.map((product) => (
-          <li className="list-group-item" key={product.id}>
-            <a href={`/dish/${product.id}`}>{product.name}</a>
-          </li>
-        ))}
+        {dishes &&
+          dishes.map((dish) => (
+            <li className="list-group-item" key={dish.id}>
+              <a href={`/dish/${dish.id}`}>{dish.name}</a>
+            </li>
+          ))}
       </ul>
     </div>
   );

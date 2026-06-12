@@ -72,7 +72,7 @@ export async function getIngredient(id: number)
 
     const json = await response.json();
 
-    return {item: json.ingredient, products: json.products} as ItemDetailsProps
+    return {item: json.ingredient, dishes: json.dishes} as ItemDetailsProps
 }
 
 export async function updateIngredient(id: number, name: string, description: string)

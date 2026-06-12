@@ -1,7 +1,7 @@
 ﻿using BackendAPI.Models;
-using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DomainModels;
 using BackendAPI.Models.DTO.IngredientDto;
-using BackendAPI.Models.DTO.ProductsDto;
+using BackendAPI.Models.DTO.DishesDto;
 
 namespace BackendAPI.Services
 {
@@ -29,7 +29,7 @@ namespace BackendAPI.Services
 
         public async Task DeleteAsync(Ingredient model)
         {
-            await _repository.DeleteAsync(model.IngredientId);
+            await _repository.DeleteAsync(model.Id);
         }
         public async Task DeleteAsync(int id)
         {
@@ -42,7 +42,7 @@ namespace BackendAPI.Services
 
             return ingredients.Select(ing => new IngredientBaseDto()
             {
-                Id = ing.IngredientId,
+                Id = ing.Id,
                 Name = ing.Name,
                 Description = ing.Description
             });
@@ -51,6 +51,11 @@ namespace BackendAPI.Services
         public async Task<Ingredient> SelectByIdAsync(int id)
         {
             return await _repository.SelectByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<Ingredient>> SelectByIdsAsync(IEnumerable<int> ingredientIds)
+        {
+            return await _repository.SelectByIdsAsync(ingredientIds);
         }
 
         public async Task<IngredientDetailsDto> SelectByIdAsync(int id, QueryOptions<Ingredient> options)
@@ -65,10 +70,10 @@ namespace BackendAPI.Services
                     Name = ingredient.Name,
                     Description = ingredient.Description
                 },
-                Products = ingredient.ProductIngredients.Select(pi => new ProductBaseDto
+                Dishes = ingredient.Dishes.Select(dish => new DishBaseDto
                 {
-                    Id = pi.ProductId,
-                    Name = pi.Product.Name
+                    Id = dish.Id,
+                    Name = dish.Name
                 })
             };
 
@@ -79,7 +84,7 @@ namespace BackendAPI.Services
         {
             Ingredient ingredient = new Ingredient()
             {
-                IngredientId = ingredientDto.Id,
+                Id = ingredientDto.Id,
                 Name = ingredientDto.Name,
                 Description = ingredientDto.Description
             };

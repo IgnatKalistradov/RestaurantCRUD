@@ -7,10 +7,10 @@ namespace BackendAPI.Models
 {
     public class Repository<TModel> : IRepository<TModel> where TModel : class
     {
-        private ApplicationDbContext _context;
+        private RestaurantContext _context;
         private DbSet<TModel> _dbSet;
 
-        public Repository(ApplicationDbContext context)
+        public Repository(RestaurantContext context)
         {
             _context = context;
             _dbSet = _context.Set<TModel>();
@@ -83,6 +83,14 @@ namespace BackendAPI.Models
             string primaryKeyName = key?.Name;
 
             return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, primaryKeyName) == id);
+        }
+
+        public async Task<IEnumerable<TModel>> SelectByIdsAsync(IEnumerable<int> ids)
+        {
+            var key = _context.Model.FindEntityType(typeof(TModel)).FindPrimaryKey().Properties.FirstOrDefault();
+            string primaryKeyName = key?.Name;
+
+            return await _dbSet.Where(e => ids.Contains(EF.Property<int>(e, primaryKeyName))).ToListAsync();
         }
 
         public async Task UpdateAsync(TModel model)

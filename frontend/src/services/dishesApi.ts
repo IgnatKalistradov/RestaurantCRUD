@@ -1,9 +1,9 @@
-import type { ProductDetails, ProductInfo } from "../types/product";
+import type { ProductDetails, DishInfo } from "../types/product";
 
 const BASE_URL = "https://localhost:7174/api";
 
 export async function getDishes() {
-    const url = `${BASE_URL}/product`;
+    const url = `${BASE_URL}/dish`;
     const options = {
         method: "GET",
         headers: {
@@ -15,12 +15,12 @@ export async function getDishes() {
 
     const json = await result.json();
 
-    return json as ProductInfo[];
+    return json as DishInfo[];
 }
 
 export async function addDish(name: string, description: string, price: number, stock: number, categoryId: number, ingredientIds: number[])
 {
-    const url = `${BASE_URL}/product`;
+    const url = `${BASE_URL}/dish`;
     const jsonBody = {
         name: name,
         description: description,
@@ -44,7 +44,7 @@ export async function addDish(name: string, description: string, price: number, 
 
 export async function deleteDish(id: number)
 {
-    const url = `${BASE_URL}/product/delete/${id}`;
+    const url = `${BASE_URL}/dish/delete/${id}`;
     const options = {
         method: "POST"
     }
@@ -56,7 +56,7 @@ export async function deleteDish(id: number)
 
 export async function getDish(id: number)
 {
-    const url = `${BASE_URL}/product/${id}`;
+    const url = `${BASE_URL}/dish/${id}`;
 
     const options = {
         method: "GET",
@@ -73,7 +73,7 @@ export async function getDish(id: number)
 }
 
 export async function updateDish(id: number, name: string, description: string, price: number, stock: number, categoryId: number, ingredientIds: number[]) {
-    const url = `${BASE_URL}/product/edit/${id}`;
+    const url = `${BASE_URL}/dish/edit/${id}`;
 
     const body = {
         id: id,

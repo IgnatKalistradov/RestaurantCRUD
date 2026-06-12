@@ -15,8 +15,8 @@ namespace BackendAPI
             // Add services to the container.
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<RestaurantContext>(options =>
+                options.UseNpgsql(connectionString));
 
             builder.Services.AddCors(options =>
             {
@@ -33,7 +33,7 @@ namespace BackendAPI
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IngredientService>();
-            builder.Services.AddScoped<ProductService>();
+            builder.Services.AddScoped<DishService>();
             builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<OrderService>();
 

@@ -1,25 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DomainModels;
 using BackendAPI.Services;
-using BackendAPI.Models.DTO.ProductsDto;
+using BackendAPI.Models.DTO.DishesDto;
 
 namespace BackendAPIAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class DishController : ControllerBase
     {
-        private readonly ProductService _productService;
+        private readonly DishService _dishService;
 
-        public ProductController(ProductService productService)
+        public DishController(DishService dishService)
         {
-            this._productService = productService;
+            this._dishService = dishService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return Ok(await _productService.SelectAllAsync());
+            return Ok(await _dishService.SelectAllAsync());
         }
 
         [HttpGet("{id:int}")]
@@ -27,8 +27,8 @@ namespace BackendAPIAPI.Controllers
         {
             try
             {
-                var product = await _productService.SelectByIdAsync(id);
-                return Ok(product);
+                var dish = await _dishService.SelectByIdAsync(id);
+                return Ok(dish);
             }
             catch (Exception ex)
             {
@@ -37,16 +37,16 @@ namespace BackendAPIAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ProductUpsertDto productDto)
+        public async Task<IActionResult> Add(DishUpsertDto dishDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(productDto);
+                return BadRequest(dishDto);
             }
 
             try
             {
-                Product product = await _productService.AddAsync(productDto);
+                Dish dish = await _dishService.AddAsync(dishDto);
                 return Created();
             }
             catch (Exception ex)
@@ -56,7 +56,7 @@ namespace BackendAPIAPI.Controllers
         }
 
         [HttpPost("edit/{id:int}")]
-        public async Task<IActionResult> Edit(ProductUpsertDto productDto)
+        public async Task<IActionResult> Edit(DishUpsertDto dishDto)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace BackendAPIAPI.Controllers
 
             try
             {
-                await _productService.UpdateAsync(productDto);
+                await _dishService.UpdateAsync(dishDto);
                 return Ok();
             }
             catch (InvalidDataException ex)
@@ -85,7 +85,7 @@ namespace BackendAPIAPI.Controllers
         {
             try
             {
-                await _productService.DeleteAsync(id);
+                await _dishService.DeleteAsync(id);
                 return NoContent();
             }
             catch (Exception ex)

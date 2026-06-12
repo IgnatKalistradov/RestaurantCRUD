@@ -1,4 +1,4 @@
-import { useCart, type ShoppingCartItem } from "../hooks/useCart";
+import { type ShoppingCartItem } from "../hooks/useCart";
 
 interface DishCardProps {
   id: number;

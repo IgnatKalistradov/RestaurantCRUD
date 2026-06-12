@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BackendAPI.Models;
-using BackendAPI.Models.DbModels;
+using BackendAPI.Models.DomainModels;
 using BackendAPI.Services;
 using BackendAPI.Models.DTO;
 
@@ -13,12 +13,12 @@ namespace BackendAPIAPI.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private ProductService _productService;
+        private DishService _dishService;
         private OrderService _orderService;
 
-        public OrderController(ProductService productService, OrderService orderService)
+        public OrderController(DishService dishService, OrderService orderService)
         {
-            _productService = productService;
+            _dishService = dishService;
             _orderService = orderService;
         }
 

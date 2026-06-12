@@ -38,7 +38,7 @@ function App() {
           <Route path="/dish/edit/:id" element={<EditDish />} />
           <Route path="/dish/:id" element={<DetailsDish />} />
           <Route path="/orders" element={<Orders />} />
-          <Route path="new-order" element={<NewOrder />} />
+          <Route path="/new-order" element={<NewOrder />} />
         </Routes>
       </main>
     </>

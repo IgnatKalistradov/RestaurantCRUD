@@ -1,13 +1,21 @@
-﻿namespace BackendAPI.Models.DbModels
+﻿using System;
+using System.Collections.Generic;
+
+namespace BackendAPI.Models.DomainModels;
+
+public partial class OrderItem
 {
-    public class OrderItem
-    {
-        public int OrderItemId { get; set; }
-        public int OrderId { get; set; }
-        public Order Order { get; set; }
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
-    }
+    public int Id { get; set; }
+
+    public int OrderId { get; set; }
+
+    public int DishId { get; set; }
+
+    public short Quantity { get; set; }
+
+    public decimal UnitPrice { get; set; }
+
+    public virtual Dish Dish { get; set; } = null!;
+
+    public virtual Order Order { get; set; } = null!;
 }

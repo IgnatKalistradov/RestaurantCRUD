@@ -56,7 +56,7 @@ export async function getCategory(id: number)
 
     const json = await result.json();
 
-    return {item: json.category, products: json.products} as ItemDetailsProps;
+    return {item: json.category, dishes: json.dishes} as ItemDetailsProps;
 }
 
 export async function deleteCategory(id: number)
