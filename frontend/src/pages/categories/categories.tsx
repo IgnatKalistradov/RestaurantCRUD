@@ -1,30 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { deleteCategory, getCategories } from "../../services/categoriesApi";
 import ItemsList from "../../components/itemsList";
 import type { Item } from "../../types/item";
 import DeleteForm from "../../components/deleteForm";
+import useFetch from "../../hooks/useFetch";
 
 function Categories() {
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const {
+    data: categories,
+    isLoading: isLoading,
+    error,
+    refetch: refetch,
+  } = useFetch<Item[]>({
+    fetchFunction: getCategories,
+  });
   const [showModal, setShowModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Item | null>(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getCategories();
-
-        setCategories(response);
-      } catch {
-        setError("Failed to load categories.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCategories();
-  }, [isLoading]);
 
   const handleRemoveButtonClick = (item: Item) => {
     setShowModal(true);
@@ -41,7 +32,7 @@ function Categories() {
 
       if (status != 204) throw new Error();
 
-      setLoading(true);
+      refetch();
     } catch {}
   };
 
@@ -63,7 +54,9 @@ function Categories() {
       <a href="/add-category">Add category</a>
       {isLoading ? (
         <p>Loading categories...</p>
-      ) : error === "" ? (
+      ) : error ? (
+        <p>{error.message}</p>
+      ) : categories?.length ? (
         <ItemsList
           items={categories}
           detailsBaseUrl="/details-category"
@@ -71,7 +64,7 @@ function Categories() {
           handleRemoveItem={handleRemoveButtonClick}
         />
       ) : (
-        <p>{error}</p>
+        <p>No categories found.</p>
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import type { ItemDetailsProps } from "../components/itemDetails";
 
-const BASE_URL = 'https://localhost:7174/api';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function addIngredient(name: string, description: string)
 {

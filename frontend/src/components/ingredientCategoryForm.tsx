@@ -3,6 +3,7 @@ import { useState, type ChangeEvent } from "react";
 interface AddPageProps {
   name?: string;
   description?: string;
+  isButtonDisabled: boolean;
   onSubmit: (name: string, description: string) => void;
 }
 
@@ -53,6 +54,7 @@ function IngredientCategoryForm(props: AddPageProps) {
       <button
         type="submit"
         className="btn btn-primary"
+        disabled={props.isButtonDisabled}
         onClick={handleFormSubmit}
       >
         Submit

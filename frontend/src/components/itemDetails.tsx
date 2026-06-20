@@ -1,5 +1,5 @@
 import type { Item } from "../types/item";
-import type { DishBase } from "../types/product";
+import type { DishBase } from "../types/dish";
 
 export interface ItemDetailsProps {
   item: Item;

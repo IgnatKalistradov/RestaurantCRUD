@@ -1,42 +1,32 @@
-import { useEffect, useState } from "react";
 import { getCategory } from "../../services/categoriesApi";
-import ItemDetails from "../../components/itemDetails";
-import type { Item } from "../../types/item";
-import type { DishBase } from "../../types/product";
+import ItemDetails, {
+  type ItemDetailsProps,
+} from "../../components/itemDetails";
 import { useParams } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import { useCallback } from "react";
 
 function DetailsCategory() {
-  const [category, setCategory] = useState<Item | null>(null);
-  const [dishes, setDishes] = useState<DishBase[]>([]);
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
   const id = Number(useParams().id);
 
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const result = await getCategory(id);
+  const fetchCategory = useCallback(() => getCategory(id), [id]);
 
-        setCategory(result.item);
-        setDishes(result.dishes);
-      } catch {
-        setError("Failed to load category.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCategory();
-  }, []);
+  const {
+    data: details,
+    isLoading,
+    error,
+  } = useFetch<ItemDetailsProps>({
+    fetchFunction: fetchCategory,
+  });
 
   return (
     <div>
       {isLoading ? (
         <p>Loading category...</p>
-      ) : error === "" && category ? (
-        <ItemDetails item={category} dishes={dishes} />
+      ) : error ? (
+        <div className="alert alert-danger">{error.message}</div>
       ) : (
-        <p>{error}</p>
+        details && <ItemDetails item={details.item} dishes={details.dishes} />
       )}
     </div>
   );

@@ -1,34 +1,29 @@
-import { useEffect, useState } from "react";
-import type { ProductDetails } from "../../types/product";
+import { useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { getDish } from "../../services/dishesApi";
-import DishDescription from "../../components/DishDescription";
+import DishDescription from "../../components/dishDescription";
+import type { DishDetails } from "../../types/dish";
+import useFetch from "../../hooks/useFetch";
 
 function DetailsDish() {
   const id = Number(useParams().id);
-  const [dish, setDish] = useState<ProductDetails | null>(null);
-  const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchDish = async () => {
-      try {
-        const result = await getDish(id);
-
-        setDish(result);
-      } catch {
-        console.log("Failed to load dish.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDish();
-  }, []);
+  const fetchDishes = useCallback(async () => {
+    return await getDish(id);
+  }, [id]);
+  const {
+    data: dish,
+    isLoading,
+    error,
+  } = useFetch<DishDetails>({ fetchFunction: fetchDishes });
 
   return (
     <>
       {isLoading && <p>Loading dish...</p>}
-      {dish && <DishDescription dish={dish} />}
+      {error ? (
+        <div className="alert alert-danger">Error loading dish.</div>
+      ) : (
+        dish && <DishDescription dish={dish} />
+      )}
     </>
   );
 }

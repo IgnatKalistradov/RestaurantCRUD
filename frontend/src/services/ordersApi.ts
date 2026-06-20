@@ -1,6 +1,6 @@
 import type { ShoppingCartItem } from "../hooks/useCart";
 
-const BASE_URL = "https://localhost:7174/api";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function createOrder(cartItems: ShoppingCartItem[])
 {

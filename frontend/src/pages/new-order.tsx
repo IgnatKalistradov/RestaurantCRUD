@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import OrderItem from "../components/orderItem";
-import { useCart } from "../hooks/useCart";
+import { useCart, type ShoppingCartItem } from "../hooks/useCart";
 import { createOrder } from "../services/ordersApi";
 import { useNavigate } from "react-router-dom";
+import useForm from "../hooks/useForm";
 
 function NewOrder() {
   const cart = useCart();
@@ -12,24 +13,30 @@ function NewOrder() {
     if (cart.cartItems.length === 0) navigate("/");
   }, [cart.cartItems]);
 
-  const handleCreateOrderClick = async () => {
-    if (cart.cartItems.length < 1) return;
-    try {
-      const status = await createOrder(cart.cartItems);
-
-      if (status != 204) throw new Error();
-
-      navigate("/orders");
-    } catch {
-      console.log("Failed to create new order");
-    } finally {
-      cart.clear();
+  const validateCart = (values: ShoppingCartItem[]) => {
+    if (values.length < 1) {
+      throw new Error("Cart is empty");
     }
+  };
+
+  const { submitForm, isSubmitting, error } = useForm<ShoppingCartItem[]>({
+    formSubmit: async (params) => {
+      const status = await createOrder(params);
+      if (status != 204) throw new Error("Failed to create order");
+    },
+    onSuccess: () => navigate("/orders"),
+    formValidation: validateCart,
+  });
+
+  const handleCreateOrderClick = async () => {
+    submitForm(cart.cartItems);
+    cart.clear();
   };
 
   return (
     <>
       <h2>New Order</h2>
+      {error && <div className="alert alert-danger">{error.message}</div>}
       <table className="table table-striped">
         <thead>
           <tr>
@@ -57,7 +64,11 @@ function NewOrder() {
         </tbody>
       </table>
       <h4 className="mb-3">Total: {cart.getTotal()}</h4>
-      <button className="btn btn-primary" onClick={handleCreateOrderClick}>
+      <button
+        className="btn btn-primary"
+        onClick={handleCreateOrderClick}
+        disabled={isSubmitting}
+      >
         Create order
       </button>
     </>

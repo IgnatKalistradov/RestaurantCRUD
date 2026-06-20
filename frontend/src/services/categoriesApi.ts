@@ -1,6 +1,7 @@
 import type { ItemDetailsProps } from "../components/itemDetails";
+import type { Item } from "../types/item";
 
-const BASE_URL = `https://localhost:7174/api`;
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function addCategory(name: string, description: string)
 {
@@ -27,7 +28,7 @@ export async function getCategories()
     const url = BASE_URL + "/category"
     const options = {
         method: `GET`,
-        Headers: {
+        HTMLAllCollectioneaders: {
             'accept': 'application/json' 
         }
     };
@@ -39,7 +40,7 @@ export async function getCategories()
         throw new Error("Failed to fetch");
     }
 
-    return response.json();
+    return await response.json() as Item[];
 }
 
 export async function getCategory(id: number)

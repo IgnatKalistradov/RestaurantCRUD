@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ItemsList from "../../components/itemsList";
 import {
   deleteIngredient,
@@ -6,31 +6,40 @@ import {
 } from "../../services/ingredientsApi";
 import type { Item } from "../../types/item";
 import DeleteForm from "../../components/deleteForm";
+import useFetch from "../../hooks/useFetch";
+import useForm from "../../hooks/useForm";
 
 function Ingredients() {
-  const [ingredients, setIngredients] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const {
+    data: ingredients,
+    isLoading,
+    error: fetchError,
+    refetch,
+  } = useFetch<Item[]>({ fetchFunction: getIngredients });
   const [showModal, setShowModal] = useState(false);
   const [ingredientToDelete, setIngredientToDelete] = useState<Item | null>(
     null,
   );
 
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        const response = await getIngredients();
+  const validateForm = (values: number) => {
+    if (values === null) {
+      throw new Error("Invalid ingredient id");
+    }
+    if (values <= 0) {
+      throw new Error("Invalid ingredient id");
+    }
+  };
 
-        setIngredients(response);
-      } catch {
-        setError("Failed to load ingredients.");
-      } finally {
-        setLoading(false);
+  const { submitForm, error: formError } = useForm<number>({
+    formSubmit: async (params) => {
+      const status = await deleteIngredient(params);
+      if (status != 204) {
+        throw new Error("Failed to delete ingredient");
       }
-    };
-
-    fetchIngredients();
-  }, [isLoading]);
+    },
+    onSuccess: refetch,
+    formValidation: validateForm,
+  });
 
   const handleRemoveItemClick = (item: Item) => {
     setShowModal(true);
@@ -39,17 +48,12 @@ function Ingredients() {
 
   const handleRemoveItemConfirm = async () => {
     setShowModal(false);
-
     if (ingredientToDelete === null) return;
 
-    try {
-      const status = await deleteIngredient(ingredientToDelete.id);
-      if (status != 204) {
-        throw new Error();
-      }
-      setLoading(true);
-    } catch {
-      console.log("Failed to delete ingredient.");
+    submitForm(ingredientToDelete.id);
+
+    if (formError) {
+      console.log(formError.message);
     }
   };
 
@@ -71,7 +75,9 @@ function Ingredients() {
       <a href="/add-ingredient">Add ingredient</a>
       {isLoading ? (
         <p>Loading ingredients...</p>
-      ) : error === "" ? (
+      ) : fetchError ? (
+        <div className="alert alert-danger">{fetchError.message}</div>
+      ) : ingredients && ingredients.length > 0 ? (
         <ItemsList
           items={ingredients}
           detailsBaseUrl="/details-ingredient"
@@ -79,7 +85,7 @@ function Ingredients() {
           handleRemoveItem={handleRemoveItemClick}
         />
       ) : (
-        <p>{error}</p>
+        <p>No ingredients found.</p>
       )}
     </div>
   );

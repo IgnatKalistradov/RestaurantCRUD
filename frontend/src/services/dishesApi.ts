@@ -1,6 +1,6 @@
-import type { ProductDetails, DishInfo } from "../types/product";
+import type { ProductDetails, DishInfo } from "../types/dish";
 
-const BASE_URL = "https://localhost:7174/api";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function getDishes() {
     const url = `${BASE_URL}/dish`;

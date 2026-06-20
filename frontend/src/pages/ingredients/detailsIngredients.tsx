@@ -1,42 +1,30 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import { getIngredient } from "../../services/ingredientsApi";
-import ItemDetails from "../../components/itemDetails";
-import type { Item } from "../../types/item";
-import type { DishBase } from "../../types/product";
+import ItemDetails, {
+  type ItemDetailsProps,
+} from "../../components/itemDetails";
+
 import { useParams } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 function DetailsIngredient() {
-  const [ingredient, setIngredient] = useState<Item | null>(null);
-  const [dishes, setDishes] = useState<DishBase[]>([]);
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
   const id = Number(useParams().id);
 
-  useEffect(() => {
-    const fetchIngredient = async () => {
-      try {
-        const result = await getIngredient(id);
-
-        setIngredient(result.item);
-        setDishes(result.dishes);
-      } catch {
-        setError("Failed to load ingredient.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchIngredient();
-  }, []);
+  const fetchData = useCallback(async () => {
+    return await getIngredient(id);
+  }, [id]);
+  const { data, isLoading, error } = useFetch<ItemDetailsProps>({
+    fetchFunction: fetchData,
+  });
 
   return (
     <div>
       {isLoading ? (
         <p>Loading ingredient...</p>
-      ) : error === "" && ingredient ? (
-        <ItemDetails item={ingredient} dishes={dishes} />
+      ) : error ? (
+        <div className="alert alert-danger">{error.message}</div>
       ) : (
-        <p>{error}</p>
+        data && <ItemDetails item={data.item} dishes={data.dishes} />
       )}
     </div>
   );

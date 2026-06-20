@@ -3,3 +3,8 @@ export interface Item {
   name: string;
   description: string;
 }
+
+export interface ItemFormData {
+  name: string;
+  description: string;
+}

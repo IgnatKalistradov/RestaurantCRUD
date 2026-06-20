@@ -1,0 +1,43 @@
+services:
+  api:
+    build:
+      context: ./BackendAPI
+      dockerfile: Dockerfile
+    image: restaurant-api
+    pull_policy: never
+    container_name: api
+    ports:
+      - "5000:8080"
+    volumes:
+      - ./BackendAPI:/app
+    command: ["dotnet", "watch", "run", "--urls=http://0.0.0.0:8080"]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: restaurant-frontend
+    pull_policy: never
+    container_name: frontend
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host"]
+
+  db:
+    image: postgres:15.3
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: restaurant
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

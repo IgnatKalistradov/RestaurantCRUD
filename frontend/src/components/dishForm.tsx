@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { Item } from "../types/item";
-import type { DishInfo } from "../types/product";
 
 interface DishFormProps {
   name?: string;
@@ -11,6 +10,7 @@ interface DishFormProps {
   dishIngredientIds?: number[];
   categories: Item[];
   ingredients: Item[];
+  isSubmitting: boolean;
   onSubmit: (
     name: string,
     description: string,
@@ -29,7 +29,7 @@ function DishForm(props: DishFormProps) {
   const [price, setPrice] = useState(props.price ? props.price : 0);
   const [stock, setStock] = useState(props.stock ? props.stock : 0);
   const [choosedCategory, setChoosedCategory] = useState(
-    props.dishCategoryId ?? 1,
+    props.dishCategoryId ?? props.categories[0]?.id ?? 0,
   );
   const [choosedIngredients, setChoosedIngredients] = useState<number[]>(
     props.dishIngredientIds ? props.dishIngredientIds : [],
@@ -109,31 +109,49 @@ function DishForm(props: DishFormProps) {
       </div>
       <div className="mb-3">
         <label className="form-label">Category</label>
-        <select
-          className="form-select"
-          value={choosedCategory}
-          onChange={(e) => handleCategoryChange(e)}
-        >
-          {props.categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+        {props.categories.length === 0 ? (
+          <a className="d-block" href="/add-category">
+            Add category
+          </a>
+        ) : (
+          <select
+            className="form-select"
+            value={choosedCategory}
+            onChange={(e) => handleCategoryChange(e)}
+          >
+            {props.categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
       <div className="mb-3">
         <label className="form-label">Ingredients</label>
-        {props.ingredients.map((ing) => (
-          <IngredientOption
-            key={ing.id}
-            id={ing.id}
-            name={ing.name}
-            isChecked={choosedIngredients.some((id) => id === ing.id) ?? false}
-            onCheck={handleIngredientCheck}
-          />
-        ))}
+        {props.ingredients.length === 0 ? (
+          <a className="d-block" href="/add-ingredient">
+            Add ingredient
+          </a>
+        ) : (
+          props.ingredients.map((ing) => (
+            <IngredientOption
+              key={ing.id}
+              id={ing.id}
+              name={ing.name}
+              isChecked={
+                choosedIngredients.some((id) => id === ing.id) ?? false
+              }
+              onCheck={handleIngredientCheck}
+            />
+          ))
+        )}
       </div>
-      <button type="submit" className="btn btn-primary">
+      <button
+        type="submit"
+        className="btn btn-primary"
+        disabled={props.isSubmitting}
+      >
         Submit
       </button>
     </form>

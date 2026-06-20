@@ -1,91 +1,115 @@
-import { useEffect, useState } from "react";
-import DishForm from "../../components/dishForm";
 import type { Item } from "../../types/item";
 import { getCategories } from "../../services/categoriesApi";
 import { getIngredients } from "../../services/ingredientsApi";
 import { addDish } from "../../services/dishesApi";
 import { useNavigate } from "react-router-dom";
+import DishForm from "../../components/dishForm";
+import useFetch from "../../hooks/useFetch";
+import useForm from "../../hooks/useForm";
+
+interface AddDishFormValues {
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  categoryId: number;
+  ingredientIds: number[];
+}
 
 function AddDish() {
   const navigate = useNavigate();
 
-  const [categories, setCategories] = useState<Item[]>();
-  const [ingredients, setIngredients] = useState<Item[]>();
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const {
+    data: categories,
+    error: categoriesError,
+    isLoading: loadingCategories,
+  } = useFetch<Item[]>({ fetchFunction: getCategories });
+  const {
+    data: ingredients,
+    error: ingredientsError,
+    isLoading: loadingIngredients,
+  } = useFetch<Item[]>({ fetchFunction: getIngredients });
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const result = await getCategories();
-
-        setCategories(result);
-      } catch {
-        setError("Failed to load categories");
-      }
-    };
-
-    const fetchIngredients = async () => {
-      try {
-        const result = await getIngredients();
-
-        setIngredients(result);
-      } catch {
-        setError("Failed to load ingredients");
-      }
-    };
-
-    fetchCategories();
-    if (error != "") {
-      setLoading(false);
-      return;
+  const validateForm = (values: AddDishFormValues) => {
+    if (values.name.trim() === "") {
+      throw new Error("Name is required");
     }
-
-    fetchIngredients();
-    setLoading(false);
-  }, []);
-
-  const handleFormSubmit = async (
-    name: string,
-    description: string,
-    price: number,
-    stock: number,
-    categoryId: number,
-    ingredientIds: number[],
-  ) => {
-    try {
-      const status = await addDish(
-        name,
-        description,
-        price,
-        stock,
-        categoryId,
-        ingredientIds,
-      );
-
-      if (status != 204) {
-        throw new Error();
-      }
-
-      navigate("/");
-    } catch {
-      setError("Failed to add dish");
+    if (values.description.trim() === "") {
+      throw new Error("Description is required");
+    }
+    if (values.price <= 0) {
+      throw new Error("Price must be greater than 0");
+    }
+    if (values.stock < 0) {
+      throw new Error("Stock cannot be negative");
+    }
+    if (values.categoryId <= 0) {
+      throw new Error("Category is required");
+    }
+    if (values.ingredientIds.length === 0) {
+      throw new Error("At least one ingredient is required");
+    }
+    if (values.ingredientIds.some((id) => id <= 0)) {
+      throw new Error("Invalid ingredient id");
     }
   };
+
+  const {
+    submitForm,
+    isSubmitting,
+    error: formError,
+  } = useForm<AddDishFormValues>({
+    formSubmit: async (values) => {
+      const status = await addDish(
+        values.name,
+        values.description,
+        values.price,
+        values.stock,
+        values.categoryId,
+        values.ingredientIds,
+      );
+      if (status != 204) throw new Error("Failed to add dish");
+    },
+    onSuccess: () => navigate("/"),
+    formValidation: validateForm,
+  });
+
   return (
     <>
       <h2>Create dish</h2>
-      {isLoading ? (
+      {formError && (
+        <div className="alert alert-danger">{formError.message}</div>
+      )}
+      {loadingCategories || loadingIngredients ? (
         <p>Loading categories and ingredients...</p>
-      ) : error != "" ? (
-        <p>{error}</p>
+      ) : categoriesError || ingredientsError ? (
+        <div className="alert alert-danger">
+          {categoriesError?.message || ingredientsError?.message}
+        </div>
       ) : (
         categories &&
         ingredients && (
           <DishForm
             categories={categories}
             ingredients={ingredients}
-            onSubmit={handleFormSubmit}
+            isSubmitting={isSubmitting}
+            onSubmit={async (
+              name: string,
+              description: string,
+              price: number,
+              stock: number,
+              categoryId: number,
+              ingredientIds: number[],
+            ) => {
+              submitForm({
+                name,
+                description,
+                price,
+                stock,
+                categoryId,
+                ingredientIds,
+              });
+            }}
           />
         )
       )}

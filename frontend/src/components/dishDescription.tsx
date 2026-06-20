@@ -1,4 +1,4 @@
-import type { ProductDetails } from "../types/product";
+import type { ProductDetails } from "../types/dish";
 
 interface DishDescriptionProps {
   dish: ProductDetails;

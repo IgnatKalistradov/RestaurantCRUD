@@ -1,45 +1,43 @@
-import { useEffect, useState } from "react";
 import type { ShoppingCartItem } from "../hooks/useCart";
 import { deleteOrder, getOrders } from "../services/ordersApi";
+import useFetch from "../hooks/useFetch";
+import useForm from "../hooks/useForm";
 
 function Orders() {
-  const [orders, setOrders] = useState<OrderInfo[] | null>(null);
-  const [isLoading, setLoading] = useState(true);
+  const {
+    data: orders,
+    isLoading,
+    error: fetchError,
+    refetch,
+  } = useFetch<OrderInfo[]>({ fetchFunction: getOrders });
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const result = await getOrders();
+  const validateDelete = (values: number) => {
+    if (values <= 0) {
+      throw new Error("Invalid order id");
+    }
+  };
 
-        setOrders(result);
-      } catch {
-        console.log("Failed to load orders.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [isLoading]);
+  const { submitForm } = useForm<number>({
+    formSubmit: async (params) => {
+      const status = await deleteOrder(params);
+      if (status != 204) throw new Error("Failed to delete order");
+    },
+    onSuccess: refetch,
+    formValidation: validateDelete,
+  });
 
   const handleDeleteOrder = async (id: number) => {
-    try {
-      const status = await deleteOrder(id);
-
-      if (status != 204) {
-        throw new Error();
-      }
-
-      setLoading(true);
-    } catch {
-      console.log("Failed to remove order");
-    }
+    submitForm(id);
   };
 
   return (
     <>
       <h2>Orders</h2>
-      {orders &&
+      {isLoading ? (
+        <p>Loading orders...</p>
+      ) : fetchError ? (
+        <div className="alert alert-danger">{fetchError.message}</div>
+      ) : orders && orders.length > 0 ? (
         orders.map((order) => (
           <OrderCard
             key={order.id}
@@ -48,7 +46,10 @@ function Orders() {
               handleDeleteOrder(order.id);
             }}
           />
-        ))}
+        ))
+      ) : (
+        <p>No orders found.</p>
+      )}
     </>
   );
 }
