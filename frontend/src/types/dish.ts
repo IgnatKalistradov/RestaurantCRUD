@@ -11,6 +11,7 @@ export interface DishInfo {
   description: string;
   price: number;
   stock: number;
+  imageUrl: string | null;
 }
 
 export interface DishDetails {
@@ -19,6 +20,7 @@ export interface DishDetails {
   description: string;
   price: number;
   stock: number;
+  imageUrl: string | null;
   category: Item;
   ingredients: Item[];
 }

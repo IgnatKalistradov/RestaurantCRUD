@@ -14,6 +14,7 @@ interface AddDishFormValues {
   stock: number;
   categoryId: number;
   ingredientIds: number[];
+  image: File | null;
 }
 
 function AddDish() {
@@ -67,6 +68,7 @@ function AddDish() {
         values.stock,
         values.categoryId,
         values.ingredientIds,
+        values.image,
       );
       if (status != 204) throw new Error("Failed to add dish");
     },
@@ -93,13 +95,14 @@ function AddDish() {
             categories={categories}
             ingredients={ingredients}
             isSubmitting={isSubmitting}
-            onSubmit={async (
+            onSubmit={(
               name: string,
               description: string,
               price: number,
               stock: number,
               categoryId: number,
               ingredientIds: number[],
+              image: File | null,
             ) => {
               submitForm({
                 name,
@@ -108,6 +111,7 @@ function AddDish() {
                 stock,
                 categoryId,
                 ingredientIds,
+                image,
               });
             }}
           />

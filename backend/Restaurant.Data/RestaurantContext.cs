@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using Restaurant.Core.Domain;
 
 namespace Restaurant.Data;
@@ -52,6 +54,10 @@ public partial class RestaurantContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .HasDefaultValueSql("NULL::character varying")
+                .HasColumnName("image_url");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
@@ -131,12 +137,10 @@ public partial class RestaurantContext : DbContext
 
             entity.HasOne(d => d.Dish).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.DishId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_order_items_dish");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_order_items_order");
         });
 

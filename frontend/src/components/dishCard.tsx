@@ -6,13 +6,22 @@ interface DishCardProps {
   description: string;
   price: number;
   stock: number;
+  imageUrl: string | null;
   onDelete: () => void;
   onAddToCart: (item: ShoppingCartItem) => void;
 }
 
+const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_URL;
+
 function DishCard(dish: DishCardProps) {
   return (
     <div className="card">
+      {dish.imageUrl && (
+        <img
+          src={`${IMAGE_BASE_URL}/${dish.imageUrl}`}
+          className="card-img-top"
+        ></img>
+      )}
       <div className="card-body">
         <h5 className="card-title">{dish.name}</h5>
         <p className="card-text">{dish.description}</p>

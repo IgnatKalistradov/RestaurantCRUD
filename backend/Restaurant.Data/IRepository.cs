@@ -2,6 +2,7 @@
 {
     public interface IRepository<TModel> where TModel : class
     {
+        Task<bool> ExistsAsync(int id);
         Task AddAsync(TModel model);
         Task<IEnumerable<TModel>> SelectAllAsync();
         Task<IEnumerable<TModel>> SelectAsync(QueryOptions<TModel> options);

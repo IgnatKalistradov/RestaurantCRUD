@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DishCard from "../../components/dishCard";
 import { deleteDish, getDishes } from "../../services/dishesApi";
 import DeleteForm from "../../components/deleteForm";
@@ -52,27 +52,32 @@ function Dishes() {
       />
       <h2>Menu page</h2>
       <a href="/add-dish">Add dish</a>
-      <div className="">
+      <div className="container text-center">
         {isLoading ? (
           <p>Loading dishes...</p>
         ) : error ? (
           <div className="alert alert-danger">{error.message}</div>
         ) : dishes && dishes.length > 0 ? (
-          dishes.map((dish) => (
-            <DishCard
-              key={dish.id}
-              id={dish.id}
-              name={dish.name}
-              description={dish.description}
-              price={dish.price}
-              stock={dish.stock}
-              onDelete={() => {
-                setItemToDelete(dish);
-                setModalVisibility(true);
-              }}
-              onAddToCart={cart.addItem}
-            />
-          ))
+          <div className="row g-4">
+            {dishes.map((dish) => (
+              <div key={dish.id} className="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <DishCard
+                  key={dish.id}
+                  id={dish.id}
+                  name={dish.name}
+                  description={dish.description}
+                  price={dish.price}
+                  stock={dish.stock}
+                  imageUrl={dish.imageUrl}
+                  onDelete={() => {
+                    setItemToDelete(dish);
+                    setModalVisibility(true);
+                  }}
+                  onAddToCart={cart.addItem}
+                />
+              </div>
+            ))}
+          </div>
         ) : (
           <p>No dishes found.</p>
         )}

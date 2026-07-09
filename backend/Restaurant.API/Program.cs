@@ -1,6 +1,7 @@
 using Restaurant.Data;
 using Restaurant.Application.Services;
 using Microsoft.EntityFrameworkCore;
+using Restaurant.Infrastructure.DI;
 
 namespace Restaurant.Api;
 public partial class Program
@@ -33,6 +34,7 @@ public partial class Program
             builder.Services.AddScoped<DishService>();
             builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<OrderService>();
+            builder.Services.AddInfrastructure(builder.Configuration);
 
             var app = builder.Build();
 
@@ -42,13 +44,16 @@ public partial class Program
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            else
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseCors("AllowFrontend");
-
-            app.UseHttpsRedirection();
 
             app.MapControllers();
 
             app.Run();
+            
         }
     }

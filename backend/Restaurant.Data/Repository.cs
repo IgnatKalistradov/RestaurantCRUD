@@ -13,6 +13,13 @@ namespace Restaurant.Data
             _context = context;
             _dbSet = _context.Set<TModel>();
         }
+        public async Task<bool> ExistsAsync(int id)
+        {
+            var key = _context.Model.FindEntityType(typeof(TModel)).FindPrimaryKey().Properties.FirstOrDefault();
+            string primaryKeyName = key?.Name;
+
+            return await _dbSet.AnyAsync(e => EF.Property<int>(e, primaryKeyName) == id);
+        }
         public async Task AddAsync(TModel model)
         {
             await _dbSet.AddAsync(model);

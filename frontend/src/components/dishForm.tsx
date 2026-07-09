@@ -18,6 +18,7 @@ interface DishFormProps {
     stock: number,
     categoryId: number,
     ingredientIds: number[],
+    image: File | null,
   ) => void;
 }
 
@@ -28,12 +29,41 @@ function DishForm(props: DishFormProps) {
   );
   const [price, setPrice] = useState(props.price ? props.price : 0);
   const [stock, setStock] = useState(props.stock ? props.stock : 0);
+  const [image, setImage] = useState<File | null>(null);
   const [choosedCategory, setChoosedCategory] = useState(
     props.dishCategoryId ?? props.categories[0]?.id ?? 0,
   );
   const [choosedIngredients, setChoosedIngredients] = useState<number[]>(
     props.dishIngredientIds ? props.dishIngredientIds : [],
   );
+
+  const isImageValid = (image: File) => {
+    if (image.size === 0) return false;
+    if (!image.type.startsWith("image/")) return false;
+    return true;
+  };
+
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
+  ) => {
+    if (!e.target.files) {
+      e.target.value = "";
+      return;
+    }
+
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) {
+      e.target.value = "";
+      return;
+    }
+
+    if (!isImageValid(selectedFile)) {
+      e.target.value = "";
+      return;
+    }
+
+    setImage(selectedFile);
+  };
 
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement, HTMLSelectElement>,
@@ -64,6 +94,7 @@ function DishForm(props: DishFormProps) {
       stock,
       choosedCategory,
       choosedIngredients,
+      image,
     );
   };
 
@@ -105,6 +136,14 @@ function DishForm(props: DishFormProps) {
           className="form-control"
           value={stock}
           onChange={(e) => setStock(Number(e.target.value))}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Image</label>
+        <input
+          type="file"
+          className="form-control"
+          onChange={(e) => handleImageChange(e)}
         />
       </div>
       <div className="mb-3">

@@ -1,3 +1,6 @@
+﻿using System;
+using System.Collections.Generic;
+
 namespace Restaurant.Core.Domain;
 
 public partial class Ingredient

@@ -12,12 +12,8 @@ services:
       - ./backend:/app
     command:
       [
-        "dotnet",
-        "watch",
-        "run",
-        "--project",
-        "./Restaurant.API/Restaurant.API.csproj",
-        "--urls=http://0.0.0.0:8080",
+        "sleep",
+	      "infinity"
       ]
 
   frontend:

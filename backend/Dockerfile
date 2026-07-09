@@ -14,6 +14,8 @@ COPY ./Restaurant.Application/Restaurant.Application.csproj ./Restaurant.Applica
 
 COPY ./Restaurant.API/Restaurant.API.csproj ./Restaurant.API/
 
+COPY ./Restaurant.Infrastructure/Restaurant.Infrastructure.csproj ./Restaurant.Infrastructure/
+
 RUN ["dotnet", "restore", "Restaurant.sln"]
 
 COPY . .

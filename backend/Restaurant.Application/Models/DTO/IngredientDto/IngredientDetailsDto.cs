@@ -2,7 +2,7 @@
 {
     public class IngredientDetailsDto
     {
-        public IngredientBaseDto Ingredient { get; set; } = new IngredientBaseDto();
+        public required IngredientBaseDto Ingredient { get; set; }
         public IEnumerable<DishBaseDto> Dishes { get; set; } = new List<DishBaseDto>();
     }
 }

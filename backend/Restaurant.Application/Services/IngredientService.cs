@@ -39,12 +39,7 @@ namespace Restaurant.Application.Services
         {
             IEnumerable<Ingredient> ingredients = await _repository.SelectAllAsync();
 
-            return ingredients.Select(ing => new IngredientBaseDto()
-            {
-                Id = ing.Id,
-                Name = ing.Name,
-                Description = ing.Description
-            });
+            return ingredients.Select(ing => new IngredientBaseDto(ing));
         }
 
         public async Task<Ingredient> SelectByIdAsync(int id)
@@ -63,12 +58,7 @@ namespace Restaurant.Application.Services
 
             IngredientDetailsDto ingredientDetails = new IngredientDetailsDto
             {
-                Ingredient = new IngredientBaseDto()
-                {
-                    Id = id,
-                    Name = ingredient.Name,
-                    Description = ingredient.Description
-                },
+                Ingredient = new IngredientBaseDto(ingredient),
                 Dishes = ingredient.Dishes.Select(dish => new DishBaseDto
                 {
                     Id = dish.Id,

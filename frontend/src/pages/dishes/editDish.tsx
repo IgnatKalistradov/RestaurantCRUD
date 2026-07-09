@@ -17,6 +17,7 @@ interface UpdateFormParams {
   stock: number;
   categoryId: number;
   ingredientIds: number[];
+  image: File | null;
 }
 
 function EditDish() {
@@ -75,6 +76,7 @@ function EditDish() {
         params.stock,
         params.categoryId,
         params.ingredientIds,
+        params.image,
       );
       if (status !== 200) {
         throw new Error("Failed to update dish");
@@ -93,6 +95,7 @@ function EditDish() {
     stock: number,
     categoryId: number,
     ingredientIds: number[],
+    image: File | null,
   ) => {
     submitForm({
       id,
@@ -102,6 +105,7 @@ function EditDish() {
       stock,
       categoryId,
       ingredientIds,
+      image,
     });
   };
 

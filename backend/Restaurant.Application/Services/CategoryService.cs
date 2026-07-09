@@ -13,6 +13,11 @@ namespace Restaurant.Application.Services
             _categoryRepository = repository;
         }
 
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _categoryRepository.ExistsAsync(id);
+        }
+
         public async Task<Category> AddAsync(CreateCategoryDto categoryDto)
         {
             Category newCategory = new Category()
@@ -30,12 +35,7 @@ namespace Restaurant.Application.Services
         {
             IEnumerable<Category> categories = await _categoryRepository.SelectAllAsync();
 
-            return categories.Select(cat => new CategoryBaseDto()
-            {
-                Id = cat.Id,
-                Name = cat.Name,
-                Description = cat.Description
-            });
+            return categories.Select(cat => new CategoryBaseDto(cat));
         }
 
         public async Task UpdateAsync(CategoryBaseDto categoryDto)
@@ -63,12 +63,7 @@ namespace Restaurant.Application.Services
         {
             Category category = await _categoryRepository.SelectByIdAsync(id, options);
             return new CategoryDetailsDto() {
-                Category = new CategoryBaseDto()
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    Description = category.Description
-                },
+                Category = new CategoryBaseDto(category),
                 Dishes = category.Dishes.Select(dish => new DishBaseDto()
                 {
                     Id = dish.Id,

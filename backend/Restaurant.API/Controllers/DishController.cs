@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Restaurant.Core.Domain;
 using Restaurant.Application.Services;
 using Restaurant.Application.Models.Dto;
+using Restaurant.Core.Domain;
 
 namespace Restaurant.Api.Controllers
 {
@@ -36,18 +36,37 @@ namespace Restaurant.Api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add(DishUpsertDto dishDto)
+        private AddImageDto? CreateImageDtoIfImagePassed(IFormFile? image)
         {
-            if (!ModelState.IsValid)
+            if(image != null && image.Length > 0)
             {
-                return BadRequest(dishDto);
+                Stream imageStream = image.OpenReadStream();
+                return new AddImageDto()
+                {
+                    FileName = image.FileName,
+                    Length = image.Length,
+                    ContentType = image.ContentType,
+                    Stream = imageStream
+                };
             }
 
+            return null;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add([FromForm] DishUpsertDto dishDto, IFormFile? image)
+        {
             try
-            {
-                Dish dish = await _dishService.AddAsync(dishDto);
+            {   
+                using AddImageDto? addImageDto = CreateImageDtoIfImagePassed(image);
+                
+                Dish dish = await _dishService.AddAsync(dishDto, addImageDto);
+                
                 return Created();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -56,17 +75,12 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPost("edit/{id:int}")]
-        public async Task<IActionResult> Edit(DishUpsertDto dishDto)
+        public async Task<IActionResult> Edit([FromForm] DishUpsertDto dishDto, IFormFile? image)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-                
-            }
-
             try
             {
-                await _dishService.UpdateAsync(dishDto);
+                using AddImageDto? imageDto = CreateImageDtoIfImagePassed(image);
+                await _dishService.UpdateAsync(dishDto, imageDto);
                 return Ok();
             }
             catch (InvalidDataException ex)
