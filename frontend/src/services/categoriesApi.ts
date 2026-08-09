@@ -1,0 +1,98 @@
+import type { ItemDetailsProps } from "../components/itemDetails";
+import type { Item } from "../types/item";
+
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+export async function addCategory(name: string, description: string)
+{
+    const body = {
+        name: name,
+        description: description
+    };
+    const url = `${BASE_URL}/Category`;
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    }
+
+    const response = await fetch(url, options);
+
+    return response.status;
+}
+
+export async function getCategories()
+{
+    const url = BASE_URL + "/category"
+    const options = {
+        method: `GET`,
+        HTMLAllCollectioneaders: {
+            'accept': 'application/json' 
+        }
+    };
+
+    const response = await fetch(url, options);
+
+    if(!response.ok)
+    {
+        throw new Error("Failed to fetch");
+    }
+
+    return await response.json() as Item[];
+}
+
+export async function getCategory(id: number)
+{
+    const url = `${BASE_URL}/Category/${id}`;
+    const options = {
+        method: "GET",
+        headers: {
+            "accept": "application/json"
+        }
+    }
+
+    const result = await fetch(url, options);
+
+    const json = await result.json();
+
+    return {item: json.category, dishes: json.dishes} as ItemDetailsProps;
+}
+
+export async function deleteCategory(id: number)
+{
+    const url = `${BASE_URL}/Category/delete/${id}`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+
+    const result = await fetch(url, options);
+
+    return result.status;
+}
+
+export async function updateCategory(id: number, name: string, description: string)
+{
+    const requestBody = {
+        id: id,
+        name: name,
+        description: description
+    };
+
+    const url = `${BASE_URL}/Category/edit/${id}`;
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    };
+
+    const result = await fetch(url, options);
+
+    return result.status;
+}

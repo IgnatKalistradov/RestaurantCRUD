@@ -1,0 +1,11 @@
+.dish-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  gap: 30px;
+}
+
+.dish-info {
+  text-align: left;
+}
